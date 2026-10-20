@@ -126,6 +126,13 @@ a{color:inherit}
 .sec-head{display:grid;gap:14px;max-width:720px;margin-bottom:44px}
 .sec-head .label{color:var(--bordeaux)}
 .sec-head p{color:var(--doux);font-size:1.08rem;max-width:58ch}
+.carte-tete{display:grid;gap:28px;margin-bottom:44px;align-items:center}
+.carte-tete .sec-head{margin-bottom:0}
+.labo{margin:0;position:relative;border-radius:18px;overflow:hidden;box-shadow:0 18px 40px -18px rgba(14,63,36,.45);aspect-ratio:4/3}
+.labo img{width:100%;height:100%;object-fit:cover;object-position:center 60%;display:block}
+.labo figcaption{position:absolute;left:12px;bottom:12px;background:rgba(14,63,36,.85);color:#FFF8EC;font-size:.82rem;padding:6px 12px;border-radius:999px}
+@media(min-width:860px){.carte-tete{grid-template-columns:1.2fr 1fr;gap:48px}.labo{aspect-ratio:4/5;max-height:420px;justify-self:end;width:100%;max-width:340px}}
+
 
 /* Offres */
 .offres{display:grid;gap:18px}
@@ -375,10 +382,13 @@ footer{background:var(--sapin-3);color:#FFF8EC}
 
   <section class="sec carte-sec" id="carte">
     <div class="wrap">
+      <div class="carte-tete">
       <div class="sec-head rv">
         <p class="label">La carte 2026</p>
         <h2>Tout est préparé <em>dans notre labo</em>.</h2>
         <p>La pinsa est la cousine romaine de la pizza, en plus légère : une pâte à base de trois farines (soja, riz et blé), croustillante dessous et moelleuse à cœur.</p>
+      </div>
+      <figure class="labo rv"><img src="img/labo.webp" alt="Notre laboratoire à Saint-Memmie : plans de travail inox, trancheuse, vitrine réfrigérée" width="800" height="1000" loading="lazy"><figcaption>Notre labo, 25 rue des Vieilles Postes</figcaption></figure>
       </div>
 
       <div class="onglets" role="tablist" aria-label="Catégories de la carte">
