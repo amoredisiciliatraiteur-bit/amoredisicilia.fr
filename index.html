@@ -172,6 +172,9 @@ a{color:inherit}
 .item{display:grid;grid-template-columns:1fr auto;gap:4px 16px;padding:18px 0;border-bottom:1px solid var(--ligne);min-width:0}
 .item .nom{font:700 1.4rem/1.15 var(--f-titre);display:flex;flex-wrap:wrap;align-items:center;gap:8px}
 .item .px{font:800 1.3rem/1.15 var(--f-titre);color:var(--bordeaux);font-variant-numeric:tabular-nums;white-space:nowrap}
+.item.avec-photo{grid-template-columns:84px 1fr auto;column-gap:14px}
+.item.avec-photo .th{grid-row:1/3;width:84px;height:84px;object-fit:cover;border-radius:14px;align-self:center}
+.item.avec-photo .desc{grid-column:2/-1}
 .item .desc{grid-column:1/-1;color:var(--doux);font-size:.95rem}
 .tag{font:800 .64rem/1 var(--f-texte);letter-spacing:.1em;text-transform:uppercase;padding:5px 9px;border-radius:999px;background:var(--bordeaux);color:#FFF8EC;transform:translateY(-1px)}
 .tag.or{background:var(--or);color:#082A17}
@@ -311,11 +314,12 @@ footer{background:var(--sapin-3);color:#FFF8EC}
         <h1>L’Italie,<br><em>ce soir</em> chez vous.</h1>
         <p class="lead">Pinse croustillantes, arancini roulés à la main et cannoli garnis minute. Tout est fait maison, au 25 rue des Vieilles Postes à Saint-Memmie.</p>
         <div class="ctas">
-          <a class="btn btn-bord" href="tel:+33676818903">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>
-            Commander à emporter
+          <a class="btn btn-bord" href="commander/">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 7h12l-1 13H7L6 7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg>
+            Commander en ligne
           </a>
-          <a class="btn btn-ghost" href="https://www.ubereats.com/store-browse-uuid/445ca3c5-136f-5aaa-9697-f885b4c8e107?diningMode=DELIVERY" target="_blank" rel="noopener">Livraison Uber Eats</a>
+          <a class="btn btn-ghost" href="tel:+33676818903">Appeler</a>
+          <a class="btn btn-ghost" href="https://www.ubereats.com/store-browse-uuid/445ca3c5-136f-5aaa-9697-f885b4c8e107?diningMode=DELIVERY" target="_blank" rel="noopener">Uber Eats</a>
         </div>
         <div class="preuves">
           <span><b>★★★★★</b> 4,9/5 · 31 avis Google</span>
@@ -386,17 +390,17 @@ footer{background:var(--sapin-3);color:#FFF8EC}
       <div class="panneau" role="tabpanel" id="p-pinse" aria-labelledby="t-pinse">
         <div class="vis"><img src="img/pinsa.webp" alt="Pinsa Parma : jambon de Parme, roquette et copeaux de parmesan" width="560" height="948" loading="lazy"><p class="cap">La Parma, roquette et copeaux de parmesan.</p></div>
         <div class="liste deux-col">
-          <div class="item"><span class="nom">Margherita</span><span class="px">10 €</span><span class="desc">Sauce tomate, mozzarella fior di latte</span></div>
-          <div class="item"><span class="nom">Regina <span class="tag">Best-seller</span></span><span class="px">12 €</span><span class="desc">Sauce tomate, fior di latte, jambon rôti, champignons</span></div>
-          <div class="item"><span class="nom">Parma</span><span class="px">12 €</span><span class="desc">Sauce tomate, fior di latte, roquette, copeaux de parmesan, jambon de Parme</span></div>
+          <div class="item avec-photo"><img class="th" src="img/p-margherita.webp" alt="Pinsa Margherita : sauce tomate, fior di latte et basilic" width="900" height="675" loading="lazy"><span class="nom">Margherita</span><span class="px">10 €</span><span class="desc">Sauce tomate, mozzarella fior di latte</span></div>
+          <div class="item avec-photo"><img class="th" src="img/p-regina.webp" alt="Pinsa Regina : jambon rôti et champignons" width="900" height="600" loading="lazy"><span class="nom">Regina <span class="tag">Best-seller</span></span><span class="px">12 €</span><span class="desc">Sauce tomate, fior di latte, jambon rôti, champignons</span></div>
+          <div class="item avec-photo"><img class="th" src="img/p-parma.webp" alt="Pinsa Parma : jambon de Parme, roquette et parmesan" width="900" height="600" loading="lazy"><span class="nom">Parma</span><span class="px">12 €</span><span class="desc">Sauce tomate, fior di latte, roquette, copeaux de parmesan, jambon de Parme</span></div>
           <div class="item"><span class="nom">Vulcano <span class="tag">Piquante</span></span><span class="px">12 €</span><span class="desc">Sauce tomate, fior di latte, spianata, gorgonzola</span></div>
-          <div class="item"><span class="nom">Formaggi</span><span class="px">12 €</span><span class="desc">Sauce tomate, fior di latte, taleggio, gorgonzola</span></div>
-          <div class="item"><span class="nom">Norma <span class="tag vert">Végé</span></span><span class="px">12 €</span><span class="desc">Sauce tomate, fior di latte, aubergines, ricotta salée au four</span></div>
+          <div class="item avec-photo"><img class="th" src="img/p-formaggi.webp" alt="Pinsa Formaggi : taleggio et gorgonzola gratinés" width="900" height="675" loading="lazy"><span class="nom">Formaggi</span><span class="px">12 €</span><span class="desc">Sauce tomate, fior di latte, taleggio, gorgonzola</span></div>
+          <div class="item avec-photo"><img class="th" src="img/p-norma.webp" alt="Pinsa Norma : aubergines grillées et ricotta salée" width="900" height="675" loading="lazy"><span class="nom">Norma <span class="tag vert">Végé</span></span><span class="px">12 €</span><span class="desc">Sauce tomate, fior di latte, aubergines, ricotta salée au four</span></div>
           <div class="item"><span class="nom">Caprino</span><span class="px">12 €</span><span class="desc">Ricotta, fior di latte, pancetta, chèvre, miel, estragon, noix</span></div>
           <div class="item"><span class="nom">4 Stagioni</span><span class="px">12 €</span><span class="desc">Sauce tomate, fior di latte, champignons, jambon rôti, artichauts, olives noires</span></div>
           <div class="item"><span class="nom">Vegetariana <span class="tag vert">Végé</span></span><span class="px">12 €</span><span class="desc">Sauce tomate, fior di latte, aubergines, poivrons et courgettes grillés</span></div>
-          <div class="item"><span class="nom">Mortadella <span class="tag or">Pistache</span></span><span class="px">14 €</span><span class="desc">Crème de ricotta à la pistache, stracciatella, fior di latte, mortadelle</span></div>
-          <div class="item"><span class="nom">Oro di Sicilia <span class="tag or">Signature</span></span><span class="px">14 €</span><span class="desc">Crème de ricotta à la pistache, pancetta, fior di latte, champignons, pistaches</span></div>
+          <div class="item avec-photo"><img class="th" src="img/p-mortadella.webp" alt="Pinsa Mortadella : mortadelle, stracciatella et éclats de pistache" width="900" height="675" loading="lazy"><span class="nom">Mortadella <span class="tag or">Pistache</span></span><span class="px">14 €</span><span class="desc">Crème de ricotta à la pistache, stracciatella, fior di latte, mortadelle</span></div>
+          <div class="item avec-photo"><img class="th" src="img/p-oro.webp" alt="Pinsa Oro di Sicilia : pancetta, champignons et pistaches" width="900" height="600" loading="lazy"><span class="nom">Oro di Sicilia <span class="tag or">Signature</span></span><span class="px">14 €</span><span class="desc">Crème de ricotta à la pistache, pancetta, fior di latte, champignons, pistaches</span></div>
         </div>
       </div>
 
@@ -405,8 +409,8 @@ footer{background:var(--sapin-3);color:#FFF8EC}
         <div>
           <p class="prix-cat">4,50 € <small>la pièce</small></p>
           <div class="liste">
-            <div class="item"><span class="nom">Ragù <span class="tag">Le classique</span></span><span class="px"></span><span class="desc">Risotto safrané, bolognaise, fior di latte</span></div>
-            <div class="item"><span class="nom">Formaggi</span><span class="px"></span><span class="desc">Risotto au taleggio, gorgonzola, parmesan, fior di latte</span></div>
+            <div class="item avec-photo"><img class="th" src="img/a-ragu.webp" alt="Arancino ragù coupé en deux" width="900" height="600" loading="lazy"><span class="nom">Ragù <span class="tag">Le classique</span></span><span class="px"></span><span class="desc">Risotto safrané, bolognaise, fior di latte</span></div>
+            <div class="item avec-photo"><img class="th" src="img/a-formaggi.webp" alt="Arancino formaggi au cœur fondant" width="900" height="600" loading="lazy"><span class="nom">Formaggi</span><span class="px"></span><span class="desc">Risotto au taleggio, gorgonzola, parmesan, fior di latte</span></div>
             <div class="item"><span class="nom">Pistacchio <span class="tag or">Pistache</span></span><span class="px"></span><span class="desc">Risotto à la pistache, mortadelle, fior di latte</span></div>
             <div class="item"><span class="nom">Tartufo</span><span class="px"></span><span class="desc">Risotto truffé, fior di latte</span></div>
           </div>
@@ -418,8 +422,8 @@ footer{background:var(--sapin-3);color:#FFF8EC}
         <div>
           <p class="prix-cat">4,50 € <small>le dessert</small></p>
           <div class="liste">
-            <div class="item"><span class="nom">Cannolo pistache</span><span class="px"></span><span class="desc">Biscuit croustillant garni de ricotta et pistache</span></div>
-            <div class="item"><span class="nom">Cannolo chocolat</span><span class="px"></span><span class="desc">Biscuit croustillant garni de ricotta et chocolat</span></div>
+            <div class="item avec-photo"><img class="th" src="img/c-pistache.webp" alt="Cannolo à la pistache" width="900" height="600" loading="lazy"><span class="nom">Cannolo pistache</span><span class="px"></span><span class="desc">Biscuit croustillant garni de ricotta et pistache</span></div>
+            <div class="item avec-photo"><img class="th" src="img/c-chocolat.webp" alt="Cannolo au chocolat" width="900" height="600" loading="lazy"><span class="nom">Cannolo chocolat</span><span class="px"></span><span class="desc">Biscuit croustillant garni de ricotta et chocolat</span></div>
             <div class="item"><span class="nom">Tiramisù choco-spéculoos</span><span class="px"></span><span class="desc">Format individuel</span></div>
             <div class="item"><span class="nom">Tiramisù pistache</span><span class="px"></span><span class="desc">Format individuel</span></div>
             <div class="item"><span class="nom">Tiramisù cappuccino</span><span class="px"></span><span class="desc">Format individuel</span></div>
@@ -438,8 +442,8 @@ footer{background:var(--sapin-3);color:#FFF8EC}
       </div>
 
       <div class="carte-pied rv">
-        <p>Une envie ? Appelez, on prépare votre commande et on vous donne l'heure de retrait.</p>
-        <a class="btn btn-bord" href="tel:+33676818903">Appeler le 06 76 81 89 03</a>
+        <p>Une envie ? Composez votre commande en ligne, choisissez l'heure de retrait et envoyez-la par WhatsApp ou SMS. Paiement au retrait.</p>
+        <a class="btn btn-bord" href="commander/">Commander en ligne</a>
       </div>
     </div>
   </section>
@@ -453,10 +457,10 @@ footer{background:var(--sapin-3);color:#FFF8EC}
       <div class="voies">
         <article class="voie mise rv">
           <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg></span>
-          <h3>Par téléphone</h3>
-          <p>La façon la plus rapide. Vous profitez de l'offre 2 + 1 et du Menu Famiglia.</p>
+          <h3>En ligne ou par téléphone</h3>
+          <p>Composez votre commande en 1 minute et choisissez l'heure de retrait, ou appelez-nous. Vous profitez de l'offre 2 + 1 et du Menu Famiglia.</p>
           <span class="num">06 76 81 89 03</span>
-          <a class="btn btn-or" href="tel:+33676818903">Appeler</a>
+          <div class="ev-ctas"><a class="btn btn-or" href="commander/">Commander en ligne</a><a class="btn btn-ghost" href="tel:+33676818903">Appeler</a></div>
         </article>
         <article class="voie rv">
           <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg></span>
@@ -569,7 +573,8 @@ footer{background:var(--sapin-3);color:#FFF8EC}
     <div class="wrap">
       <h2>Une pinsa <em>ce soir</em> ?</h2>
       <div class="ctas">
-        <a class="btn btn-bord" href="tel:+33676818903">Appeler le 06 76 81 89 03</a>
+        <a class="btn btn-bord" href="commander/">Commander en ligne</a>
+        <a class="btn btn-ghost" href="tel:+33676818903">06 76 81 89 03</a>
         <a class="btn btn-ghost" href="https://www.ubereats.com/store-browse-uuid/445ca3c5-136f-5aaa-9697-f885b4c8e107?diningMode=DELIVERY" target="_blank" rel="noopener">Livraison Uber Eats</a>
       </div>
     </div>
@@ -586,8 +591,8 @@ footer{background:var(--sapin-3);color:#FFF8EC}
 </footer>
 
 <div class="barre">
-  <a class="btn btn-bord" href="tel:+33676818903">Appeler</a>
-  <a class="btn btn-ghost" href="#carte">La carte</a>
+  <a class="btn btn-bord" href="commander/">Commander</a>
+  <a class="btn btn-ghost" href="tel:+33676818903">Appeler</a>
   <a class="btn btn-ghost" href="https://www.ubereats.com/store-browse-uuid/445ca3c5-136f-5aaa-9697-f885b4c8e107?diningMode=DELIVERY" target="_blank" rel="noopener">Uber Eats</a>
 </div>
 

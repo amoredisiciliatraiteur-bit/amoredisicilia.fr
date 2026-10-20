@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Commander à emporter · Amore di Sicilia</title>
+<meta name="description" content="Commandez vos pinse, arancini et cannoli à emporter chez Amore di Sicilia, Saint-Memmie. Choisissez votre heure de retrait, paiement sur place.">
+<link rel="icon" href="/img/logo.webp">
+<link rel="canonical" href="https://amoredisicilia.fr/commander/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,700;0,6..96,800;1,6..96,500&family=Figtree:wght@400;500;600;700;800&display=swap">
+<style>
+/* Commande en 3 temps : produits par catégorie, récap collant (barre mobile), envoi WhatsApp/SMS */
+:root{
+  --creme:#FFF8EC; --creme-2:#F5E9D2; --sapin:#0E3F24; --sapin-3:#082A17; --bordeaux:#9D0E20; --bordeaux-2:#7E0B1A; --or:#E2AE48;
+  --bg:var(--creme); --fg:#0E3F24; --surface:#FFFFFF; --ligne:#E4D5B7; --doux:#4F6A59; --ok:#1E7A45;
+  --f-titre:"Bodoni Moda","Didot",Georgia,serif; --f-texte:"Figtree","Helvetica Neue",Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0A1C12;--fg:#F4EBD9;--surface:#11281A;--ligne:#24432F;--doux:#B3C3B8;--creme-2:#0F2418;--bordeaux:#C3263A;--bordeaux-2:#A51D30;--ok:#5BD38A;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0A1C12;--fg:#F4EBD9;--surface:#11281A;--ligne:#24432F;--doux:#B3C3B8;--creme-2:#0F2418;--bordeaux:#C3263A;--bordeaux-2:#A51D30;--ok:#5BD38A;color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:130px}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-texte);font-size:16px;line-height:1.5;padding-bottom:calc(96px + env(safe-area-inset-bottom,0px))}
+@media (min-width:980px){body{padding-bottom:0}}
+img{max-width:100%}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-titre);font-weight:800;line-height:1.05;margin:0;text-wrap:balance}
+p{margin:0}
+:focus-visible{outline:3px solid var(--or);outline-offset:3px;border-radius:6px}
+.top{position:sticky;top:0;z-index:40;background:var(--sapin-3);color:#FFF8EC;padding-top:env(safe-area-inset-top,0px)}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:10px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit}
+.logo img{width:46px;height:46px;border-radius:50%;background:#FFF8EC}
+.logo span{font:800 1.15rem/1 var(--f-titre)}
+.logo i{color:var(--or);font-weight:500}
+.top a.retour{color:#FFF8EC;opacity:.8;font-weight:600;font-size:.92rem}
+.cats{display:flex;gap:8px;overflow-x:auto;padding-block:10px;scrollbar-width:none;background:var(--sapin-3)}
+.cats::-webkit-scrollbar{display:none}
+.cats a{flex:none;color:#FFF8EC;text-decoration:none;font-weight:700;font-size:.92rem;padding:9px 16px;border-radius:999px;border:1.5px solid rgba(255,248,236,.25)}
+.intro{padding-block:28px 8px;display:grid;gap:8px}
+.intro h1{font-size:clamp(2rem,5vw,3rem)}
+.intro h1 em{font-style:italic;font-weight:500;color:var(--bordeaux)}
+.intro p{color:var(--doux);max-width:60ch}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.badges span{font-size:.82rem;font-weight:700;padding:6px 12px;border-radius:999px;background:var(--creme-2)}
+.layout{display:grid;gap:28px;padding-block:16px 48px}
+@media (min-width:980px){.layout{grid-template-columns:1fr 380px;align-items:start}}
+.cat{display:grid;gap:12px;margin-bottom:24px}
+.cat h2{font-size:1.7rem;display:flex;align-items:baseline;gap:10px}
+.cat h2 small{font:600 .85rem/1 var(--f-texte);color:var(--doux)}
+.grid{display:grid;gap:12px}
+@media (min-width:640px){.grid{grid-template-columns:1fr 1fr}}
+.prod{display:grid;grid-template-columns:96px 1fr;gap:12px;background:var(--surface);border:1px solid var(--ligne);border-radius:18px;padding:10px;align-items:center;min-width:0}
+.prod.sans-photo{grid-template-columns:1fr}
+.prod img{width:96px;height:96px;object-fit:cover;border-radius:12px;display:block}
+.prod .info{display:grid;gap:4px;min-width:0}
+.prod .nom{font:700 1.15rem/1.15 var(--f-titre)}
+.prod .desc{color:var(--doux);font-size:.85rem;line-height:1.35}
+.prod .bas{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:4px}
+.prod .px{font:800 1.1rem/1 var(--f-titre);color:var(--bordeaux);font-variant-numeric:tabular-nums}
+.qte{display:flex;align-items:center;gap:6px}
+.qte button{width:36px;height:36px;border-radius:50%;border:0;font:800 1.2rem/1 var(--f-texte);cursor:pointer;background:var(--bordeaux);color:#FFF8EC}
+.qte button.moins{background:var(--creme-2);color:var(--fg)}
+.qte output{min-width:20px;text-align:center;font-weight:800;font-variant-numeric:tabular-nums}
+.choix{font:600 .82rem/1.2 var(--f-texte);padding:6px 8px;border-radius:10px;border:1px solid var(--ligne);background:var(--bg);color:var(--fg);max-width:100%}
+.recap{background:var(--surface);border:1px solid var(--ligne);border-radius:22px;padding:20px;display:grid;gap:14px}
+@media (min-width:980px){.recap{position:sticky;top:130px}}
+.recap h2{font-size:1.5rem}
+.lignes{display:grid;gap:8px;font-size:.94rem}
+.ligne{display:flex;justify-content:space-between;gap:10px}
+.ligne.remise{color:var(--ok);font-weight:700}
+.total{display:flex;justify-content:space-between;align-items:baseline;border-top:1px dashed var(--ligne);padding-top:12px;font:800 1.5rem/1 var(--f-titre);font-variant-numeric:tabular-nums}
+.vide{color:var(--doux);font-size:.94rem}
+label{font-weight:700;font-size:.88rem;display:grid;gap:6px}
+input,select,textarea{font:500 1rem/1.3 var(--f-texte);padding:12px 14px;border-radius:12px;border:1.5px solid var(--ligne);background:var(--bg);color:var(--fg);width:100%}
+textarea{min-height:64px;resize:vertical}
+.deux{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font:800 1rem/1 var(--f-texte);text-decoration:none;border-radius:999px;padding:16px 20px;border:0;cursor:pointer;width:100%}
+.btn svg{width:20px;height:20px}
+.btn-wa{background:#1FAF55;color:#fff}
+.btn-sms{background:var(--sapin);color:#FFF8EC}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.aide{font-size:.82rem;color:var(--doux)}
+.erreur{color:var(--bordeaux);font-weight:700;font-size:.88rem}
+.fait{background:#E3F4E9;color:#1E7A45;border-radius:14px;padding:14px;font-weight:700;font-size:.92rem}
+.barre{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--sapin-3);color:#FFF8EC;padding:12px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;align-items:center;justify-content:space-between;gap:12px}
+.barre b{font:800 1.3rem/1 var(--f-titre)}
+.barre a{background:var(--bordeaux);color:#FFF8EC;text-decoration:none;font-weight:800;padding:14px 20px;border-radius:999px}
+@media (min-width:980px){.barre{display:none}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="/"><img src="/img/logo.webp" alt="" width="46" height="46"><span>Amore <i>di</i> Sicilia</span></a>
+    <a class="retour" href="/">← Retour au site</a>
+  </div>
+  <nav class="cats wrap" aria-label="Catégories">
+    <a href="#c-offres">Menus</a><a href="#c-pinse">Pinse</a><a href="#c-arancini">Arancini</a><a href="#c-desserts">Desserts</a><a href="#c-boissons">Boissons</a><a href="#recap">Ma commande</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <section class="intro">
+    <h1>Commander <em>à emporter</em></h1>
+    <p>Choisissez vos produits et l'heure de retrait, puis envoyez la commande par WhatsApp ou SMS. On vous confirme par message. Paiement au retrait (CB ou espèces).</p>
+    <div class="badges"><span>🎁 2 pinse achetées = la 3<sup>e</sup> offerte (calculé automatiquement)</span><span>📍 25 rue des Vieilles Postes, Saint-Memmie</span><span>🕖 Mer – dim, 19h – 22h</span></div>
+  </section>
+
+  <div class="layout">
+    <div id="produits"></div>
+
+    <aside class="recap" id="recap" aria-labelledby="t-recap">
+      <h2 id="t-recap">Ma commande</h2>
+      <div class="lignes" id="lignes"><p class="vide">Votre panier est vide. Ajoutez une pinsa pour commencer.</p></div>
+      <div class="total"><span>Total</span><span id="total">0,00 €</span></div>
+      <div class="deux">
+        <label for="prenom">Prénom<input id="prenom" autocomplete="given-name" placeholder="Votre prénom"></label>
+        <label for="tel">Portable<input id="tel" type="tel" autocomplete="tel" inputmode="tel" placeholder="06…"></label>
+      </div>
+      <label for="jour">Retrait<select id="jour"></select></label>
+      <label for="heure">Heure de retrait<select id="heure"></select></label>
+      <label for="note">Remarque (facultatif)<textarea id="note" placeholder="Allergie, sans roquette, code arancino offert…"></textarea></label>
+      <p class="erreur" id="err" hidden></p>
+      <button class="btn btn-wa" id="wa" type="button"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3a.5.5 0 0 0 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg>Envoyer par WhatsApp</button>
+      <button class="btn btn-sms" id="sms" type="button">Envoyer par SMS</button>
+      <p class="aide">Votre application WhatsApp ou Messages s'ouvre avec la commande déjà écrite : il ne reste qu'à appuyer sur Envoyer. Ou appelez le <b>06 76 81 89 03</b>.</p>
+      <p class="fait" id="fait" hidden>Merci ! Envoyez le message qui vient de s'ouvrir. Nous vous confirmons la commande par retour.</p>
+    </aside>
+  </div>
+</main>
+
+<div class="barre" id="barre"><span><span id="b-nb">0 article</span> · <b id="b-total">0,00 €</b></span><a href="#recap">Valider</a></div>
+
+<script>
+(function(){
+  var TEL='33676818903';
+  var P=[
+    {cat:'offres',titre:'Menus',items:[
+      {id:'famiglia',nom:'Menu Famiglia',px:35,desc:'2 pinse + 2 arancini + 1 boisson 1,25 L (hors Mortadella et Oro di Sicilia)',menu:true}
+    ]},
+    {cat:'pinse',titre:'Pinse',items:[
+      {id:'margherita',nom:'Margherita',px:10,img:'p-margherita',desc:'Sauce tomate, fior di latte',pinsa:true},
+      {id:'regina',nom:'Regina',px:12,img:'p-regina',desc:'Sauce tomate, fior di latte, jambon rôti, champignons',pinsa:true},
+      {id:'parma',nom:'Parma',px:12,img:'p-parma',desc:'Sauce tomate, fior di latte, roquette, parmesan, jambon de Parme',pinsa:true},
+      {id:'vulcano',nom:'Vulcano',px:12,desc:'Sauce tomate, fior di latte, spianata piquante, gorgonzola',pinsa:true},
+      {id:'formaggi',nom:'Formaggi',px:12,img:'p-formaggi',desc:'Sauce tomate, fior di latte, taleggio, gorgonzola',pinsa:true},
+      {id:'norma',nom:'Norma',px:12,img:'p-norma',desc:'Sauce tomate, fior di latte, aubergines, ricotta salée au four',pinsa:true},
+      {id:'caprino',nom:'Caprino',px:12,desc:'Ricotta, fior di latte, pancetta, chèvre, miel, estragon, noix',pinsa:true},
+      {id:'stagioni',nom:'4 Stagioni',px:12,desc:'Sauce tomate, fior di latte, champignons, jambon rôti, artichauts, olives',pinsa:true},
+      {id:'vegetariana',nom:'Vegetariana',px:12,desc:'Sauce tomate, fior di latte, légumes grillés',pinsa:true},
+      {id:'mortadella',nom:'Mortadella',px:14,img:'p-mortadella',desc:'Crème de ricotta pistache, stracciatella, fior di latte, mortadelle',pinsa:true},
+      {id:'oro',nom:'Oro di Sicilia',px:14,img:'p-oro',desc:'Crème de ricotta pistache, pancetta, fior di latte, champignons, pistaches',pinsa:true}
+    ]},
+    {cat:'arancini',titre:'Arancini',note:'4,50 € pièce',items:[
+      {id:'a-ragu',nom:'Arancino Ragù',px:4.5,img:'a-ragu',desc:'Risotto safrané, bolognaise, fior di latte'},
+      {id:'a-formaggi',nom:'Arancino Formaggi',px:4.5,img:'a-formaggi',desc:'Taleggio, gorgonzola, parmesan, fior di latte'},
+      {id:'a-pistacchio',nom:'Arancino Pistacchio',px:4.5,desc:'Risotto pistache, mortadelle, fior di latte'},
+      {id:'a-tartufo',nom:'Arancino Tartufo',px:4.5,desc:'Risotto truffé, fior di latte'}
+    ]},
+    {cat:'desserts',titre:'Desserts',note:'4,50 €',items:[
+      {id:'c-pistache',nom:'Cannolo pistache',px:4.5,img:'c-pistache',desc:'Ricotta et pistache'},
+      {id:'c-chocolat',nom:'Cannolo chocolat',px:4.5,img:'c-chocolat',desc:'Ricotta et chocolat'},
+      {id:'tiramisu',nom:'Tiramisù',px:4.5,desc:'Choisissez le parfum',choix:['Choco-spéculoos','Pistache','Cappuccino']}
+    ]},
+    {cat:'boissons',titre:'Boissons',items:[
+      {id:'spritz',nom:'Spritz 75 cl',px:9.9,desc:'Prêt à servir, à base de prosecco (8°)',choix:['Gondola classico','Altura fleur de sureau','Costiera limoncello']},
+      {id:'b125',nom:'Bouteille 1,25 L',px:5,desc:'',choix:['Coca-Cola','Coca-Cola zéro','Coca Cherry','Fuze Tea']},
+      {id:'b33',nom:'Canette 33 cl',px:3,desc:'',choix:['Coca-Cola','Coca-Cola zéro','Coca Cherry','Fuze Tea','Oasis Tropical']},
+      {id:'eau',nom:'Eau 50 cl',px:2,desc:'',choix:['Plate','Gazeuse']}
+    ]}
+  ];
+  var idx={}; P.forEach(function(c){c.items.forEach(function(i){idx[i.id]=i})});
+  var panier={}; // clé id|choix -> qte
+  try{panier=JSON.parse(localStorage.getItem('amore-panier')||'{}')||{}}catch(e){}
+  function save(){try{localStorage.setItem('amore-panier',JSON.stringify(panier))}catch(e){}}
+  function eur(n){return n.toFixed(2).replace('.',',')+' €'}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+
+  // rendu produits
+  var html='';
+  P.forEach(function(c){
+    html+='<section class="cat" id="c-'+c.cat+'"><h2>'+c.titre+(c.note?' <small>'+c.note+'</small>':'')+'</h2><div class="grid">';
+    c.items.forEach(function(i){
+      html+='<article class="prod'+(i.img?'':' sans-photo')+'">'+(i.img?'<img src="/img/'+i.img+'.webp" alt="" width="96" height="96" loading="lazy">':'')+
+        '<div class="info"><span class="nom">'+esc(i.nom)+'</span>'+(i.desc?'<span class="desc">'+esc(i.desc)+'</span>':'')+
+        (i.choix?'<select class="choix" data-choix="'+i.id+'" aria-label="Choix pour '+esc(i.nom)+'">'+i.choix.map(function(x){return '<option>'+esc(x)+'</option>'}).join('')+'</select>':'')+
+        '<div class="bas"><span class="px">'+eur(i.px)+'</span><span class="qte"><button class="moins" type="button" data-moins="'+i.id+'" aria-label="Retirer '+esc(i.nom)+'">−</button><output data-q="'+i.id+'">0</output><button type="button" data-plus="'+i.id+'" aria-label="Ajouter '+esc(i.nom)+'">+</button></span></div></div></article>';
+    });
+    html+='</div></section>';
+  });
+  document.getElementById('produits').innerHTML=html;
+
+  function cle(id){var s=document.querySelector('[data-choix="'+id+'"]');return id+(s?'|'+s.value:'')}
+  document.getElementById('produits').addEventListener('click',function(e){
+    var p=e.target.closest('[data-plus]'),m=e.target.closest('[data-moins]');
+    if(p){var k=cle(p.dataset.plus);panier[k]=(panier[k]||0)+1}
+    else if(m){var k2=cle(m.dataset.moins);if(panier[k2]){panier[k2]--;if(!panier[k2])delete panier[k2]}}
+    else return;
+    save();rendre();
+  });
+  document.getElementById('produits').addEventListener('change',function(e){if(e.target.matches('[data-choix]'))rendre()});
+
+  function calcul(){
+    var lignes=[],total=0,pinsePx=[],nb=0;
+    Object.keys(panier).forEach(function(k){
+      var parts=k.split('|'),i=idx[parts[0]];if(!i)return;
+      var q=panier[k];nb+=q;
+      lignes.push({q:q,nom:i.nom+(parts[1]?' ('+parts[1]+')':''),px:i.px*q});
+      total+=i.px*q;
+      if(i.pinsa)for(var n=0;n<q;n++)pinsePx.push(i.px);
+    });
+    pinsePx.sort(function(a,b){return a-b});
+    var off=Math.floor(pinsePx.length/3),remise=0;
+    for(var j=0;j<off;j++)remise+=pinsePx[j];
+    return {lignes:lignes,total:total-remise,remise:remise,offertes:off,nb:nb};
+  }
+  function rendre(){
+    document.querySelectorAll('[data-q]').forEach(function(o){
+      var id=o.dataset.q,n=0;Object.keys(panier).forEach(function(k){if(k.split('|')[0]===id)n+=panier[k]});o.textContent=n;
+    });
+    var c=calcul(),L=document.getElementById('lignes');
+    L.innerHTML=c.lignes.length?c.lignes.map(function(l){return '<div class="ligne"><span>'+l.q+' × '+esc(l.nom)+'</span><span>'+eur(l.px)+'</span></div>'}).join('')+(c.remise?'<div class="ligne remise"><span>🎁 '+c.offertes+' pinsa offerte'+(c.offertes>1?'s':'')+' (2 + 1)</span><span>−'+eur(c.remise)+'</span></div>':''):'<p class="vide">Votre panier est vide. Ajoutez une pinsa pour commencer.</p>';
+    document.getElementById('total').textContent=eur(c.total);
+    document.getElementById('b-total').textContent=eur(c.total);
+    document.getElementById('b-nb').textContent=c.nb+' article'+(c.nb>1?'s':'');
+  }
+
+  // créneaux
+  var J=document.getElementById('jour'),H=document.getElementById('heure');
+  function parisNow(){var d=new Date(new Date().toLocaleString('en-US',{timeZone:'Europe/Paris'}));return d}
+  function ouvert(d){var w=d.getDay();return w===0||w>=3}
+  var now=parisNow(),jours=[];
+  for(var k=0;k<8&&jours.length<4;k++){var d=new Date(now);d.setDate(now.getDate()+k);if(!ouvert(d))continue;
+    if(k===0&&(now.getHours()*60+now.getMinutes())>21*60+40)continue;
+    jours.push({d:d,label:k===0?"Aujourd'hui":k===1?'Demain':d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})});}
+  J.innerHTML=jours.map(function(j,i){return '<option value="'+i+'">'+j.label.charAt(0).toUpperCase()+j.label.slice(1)+'</option>'}).join('');
+  function heures(){
+    var j=jours[+J.value],out=[],min=19*60;
+    if(j&&j.d.toDateString()===now.toDateString())min=Math.max(min,Math.ceil((now.getHours()*60+now.getMinutes()+20)/15)*15);
+    for(var t=min;t<=21*60+45;t+=15)out.push(String(Math.floor(t/60))+'h'+String(t%60).padStart(2,'0'));
+    H.innerHTML=out.length?out.map(function(h){return '<option>'+h+'</option>'}).join(''):'<option value="">Plus de créneau</option>';
+  }
+  J.addEventListener('change',heures);heures();
+
+  try{var mem=JSON.parse(localStorage.getItem('amore-client')||'{}');if(mem.p)document.getElementById('prenom').value=mem.p;if(mem.t)document.getElementById('tel').value=mem.t}catch(e){}
+
+  function message(){
+    var c=calcul(),err=document.getElementById('err'),p=document.getElementById('prenom').value.trim(),t=document.getElementById('tel').value.trim();
+    var e='';
+    if(!c.nb)e='Ajoutez au moins un produit.';else if(!p)e='Indiquez votre prénom.';else if(t.replace(/\D/g,'').length<10)e='Indiquez votre numéro de portable.';else if(!H.value)e='Choisissez une heure de retrait.';
+    err.hidden=!e;err.textContent=e;if(e)return null;
+    try{localStorage.setItem('amore-client',JSON.stringify({p:p,t:t}))}catch(x){}
+    var j=jours[+J.value];
+    var m='🍕 Nouvelle commande à emporter\n'+c.lignes.map(function(l){return '• '+l.q+' × '+l.nom+' — '+eur(l.px)}).join('\n')+
+      (c.remise?'\n🎁 '+c.offertes+' pinsa offerte (2+1) — −'+eur(c.remise):'')+'\nTotal : '+eur(c.total)+
+      '\n\nRetrait : '+j.label+' à '+H.value+'\nNom : '+p+'\nTél : '+t+(document.getElementById('note').value.trim()?'\nRemarque : '+document.getElementById('note').value.trim():'')+'\n\n(Envoyé depuis amoredisicilia.fr)';
+    return m;
+  }
+  function fini(){document.getElementById('fait').hidden=false}
+  document.getElementById('wa').addEventListener('click',function(){var m=message();if(!m)return;location.href='https://wa.me/'+TEL+'?text='+encodeURIComponent(m);fini()});
+  document.getElementById('sms').addEventListener('click',function(){var m=message();if(!m)return;var ios=/iPhone|iPad|iPod/.test(navigator.userAgent);location.href='sms:+'+TEL+(ios?'&':'?')+'body='+encodeURIComponent(m);fini()});
+  rendre();
+})();
+</script>
+</body>
+</html>
