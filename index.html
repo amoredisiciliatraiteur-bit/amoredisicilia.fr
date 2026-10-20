@@ -161,14 +161,15 @@ a{color:inherit}
 .onglet[aria-selected="true"]{background:var(--carte-sel);color:var(--carte-sel-fg);border-color:var(--carte-sel)}
 .onglet .n{opacity:.6;font-weight:600;margin-left:4px;font-variant-numeric:tabular-nums}
 .panneau{display:grid;gap:28px}
-@media (min-width:900px){.panneau{grid-template-columns:320px 1fr;gap:48px;align-items:start}}
+
 .panneau .vis{border-radius:var(--r);background:var(--sapin);aspect-ratio:4/5;max-width:100%;display:grid;place-items:center;padding:24px;position:relative;overflow:hidden}
 .panneau .vis img{width:86%;height:auto;filter:drop-shadow(0 20px 24px rgba(0,0,0,.45))}
 .panneau .vis .cap{position:absolute;left:20px;bottom:18px;right:20px;color:#FFF8EC;font:italic 500 1.15rem/1.25 var(--f-titre)}
 .panneau .vis .cap{background:linear-gradient(transparent,rgba(8,42,23,.85) 45%);margin:0 -20px -18px;padding:28px 20px 16px}
 @media (max-width:899px){.panneau .vis{aspect-ratio:4/3;padding:16px 16px 56px}.panneau .vis img{width:auto;max-width:100%;height:100%;object-fit:contain}}
 .liste{display:grid;gap:0}
-@media (min-width:700px){.liste.deux-col{grid-template-columns:1fr 1fr;column-gap:36px}}
+@media (min-width:700px){.liste.deux-col{grid-template-columns:1fr 1fr;column-gap:40px}}
+@media (min-width:900px){.panneau>div:not(.liste){max-width:none}.panneau .liste:not(.deux-col){grid-template-columns:1fr 1fr;column-gap:40px}}
 .item{display:grid;grid-template-columns:1fr auto;gap:4px 16px;padding:18px 0;border-bottom:1px solid var(--ligne);min-width:0}
 .item .nom{font:700 1.4rem/1.15 var(--f-titre);display:flex;flex-wrap:wrap;align-items:center;gap:8px}
 .item .px{font:800 1.3rem/1.15 var(--f-titre);color:var(--bordeaux);font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -388,7 +389,6 @@ footer{background:var(--sapin-3);color:#FFF8EC}
       </div>
 
       <div class="panneau" role="tabpanel" id="p-pinse" aria-labelledby="t-pinse">
-        <div class="vis"><img src="img/pinsa.webp" alt="Pinsa Parma : jambon de Parme, roquette et copeaux de parmesan" width="560" height="948" loading="lazy"><p class="cap">La Parma, roquette et copeaux de parmesan.</p></div>
         <div class="liste deux-col">
           <div class="item avec-photo"><img class="th" src="img/p-margherita.webp" alt="Pinsa Margherita : sauce tomate, fior di latte et basilic" width="900" height="675" loading="lazy"><span class="nom">Margherita</span><span class="px">10 €</span><span class="desc">Sauce tomate, mozzarella fior di latte</span></div>
           <div class="item avec-photo"><img class="th" src="img/p-regina.webp" alt="Pinsa Regina : jambon rôti et champignons" width="900" height="600" loading="lazy"><span class="nom">Regina <span class="tag">Best-seller</span></span><span class="px">12 €</span><span class="desc">Sauce tomate, fior di latte, jambon rôti, champignons</span></div>
@@ -405,7 +405,6 @@ footer{background:var(--sapin-3);color:#FFF8EC}
       </div>
 
       <div class="panneau" role="tabpanel" id="p-arancini" aria-labelledby="t-arancini" hidden>
-        <div class="vis"><img src="img/arancini.webp" alt="Arancini entiers et coupés en deux, cœur filant" width="760" height="663" loading="lazy"><p class="cap">Panés et frits minute, le cœur reste filant.</p></div>
         <div>
           <p class="prix-cat">4,50 € <small>la pièce</small></p>
           <div class="liste">
@@ -418,7 +417,6 @@ footer{background:var(--sapin-3);color:#FFF8EC}
       </div>
 
       <div class="panneau" role="tabpanel" id="p-desserts" aria-labelledby="t-desserts" hidden>
-        <div class="vis"><img src="img/cannolo.webp" alt="Cannolo sicilien garni de ricotta et d'éclats de pistache" width="420" height="258" loading="lazy"><p class="cap">Le cannolo, garni à la commande pour rester croustillant.</p></div>
         <div>
           <p class="prix-cat">4,50 € <small>le dessert</small></p>
           <div class="liste">
@@ -432,7 +430,6 @@ footer{background:var(--sapin-3);color:#FFF8EC}
       </div>
 
       <div class="panneau" role="tabpanel" id="p-boissons" aria-labelledby="t-boissons" hidden>
-        <div class="vis"><p class="cap" style="position:static;font-size:1.6rem;text-align:center">Spritz prêts à servir, à base de prosecco.</p></div>
         <div class="liste">
           <div class="item"><span class="nom">Spritz 75 cl <span class="tag or">À partager</span></span><span class="px">9,90 €</span><span class="desc">Gondola classico, Altura fleur de sureau ou Costiera limoncello (8°)</span></div>
           <div class="item"><span class="nom">Bouteilles 1,25 L</span><span class="px">5 €</span><span class="desc">Coca-Cola, Coca-Cola zéro, Coca Cherry, Fuze Tea</span></div>
