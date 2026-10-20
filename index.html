@@ -9,6 +9,9 @@
 <meta property="og:description" content="Pinse, arancini et cannoli faits maison. À emporter mercredi-dimanche 19h-22h. 2 pinse achetées = 1 offerte.">
 <meta property="og:type" content="restaurant">
 <meta property="og:url" content="https://amoredisicilia.fr/">
+<link rel="icon" type="image/webp" href="img/logo.webp">
+<link rel="apple-touch-icon" href="img/logo.webp">
+<meta property="og:image" content="https://amoredisicilia.fr/img/logo.webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,600;0,6..96,800;1,6..96,500;1,6..96,700&family=Figtree:wght@400;500;600;700;800&display=swap">
@@ -65,7 +68,8 @@ a{color:inherit}
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:rgba(8,42,23,.92);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#FFF8EC}
 .top .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:12px}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.logo .mark{width:34px;height:34px;border-radius:50%;background:var(--bordeaux);display:grid;place-items:center;font:italic 700 1.1rem/1 var(--f-titre);color:#FFF8EC}
+.logo .mark{width:54px;height:54px;border-radius:50%;background:#FFF8EC;display:block;box-shadow:0 0 0 2px rgba(226,174,72,.55);flex:none}
+@media (min-width:900px){.logo .mark{width:62px;height:62px}}
 .logo .nom{font:800 1.25rem/1 var(--f-titre)}
 .logo .nom i{font-weight:500;color:var(--or)}
 .top nav{display:none;gap:26px;font-weight:600;font-size:.94rem}
@@ -197,6 +201,7 @@ a{color:inherit}
 .histoire h2{margin-top:14px}
 .histoire h2 em{color:var(--or)}
 .histoire .txt{display:grid;gap:16px;margin-top:22px;opacity:.88;font-size:1.06rem;max-width:56ch}
+.sceau{display:block;width:min(260px,70%);height:auto;margin:0 auto 32px;opacity:.95}
 .chiffres{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .chiffre{border:1px solid rgba(255,248,236,.18);border-radius:18px;padding:22px 16px;display:grid;gap:6px;align-content:start}
 .chiffre b{font:800 clamp(2.2rem,5vw,3.2rem)/1 var(--f-titre);color:var(--or);font-variant-numeric:tabular-nums}
@@ -224,6 +229,21 @@ a{color:inherit}
 .btn-creme{background:#FFF8EC;color:#7E0B1A}
 .piaggio svg.vespa{position:absolute;right:-20px;top:24px;width:170px;opacity:.14}
 
+.ev ul.inclus{grid-template-columns:1fr 1fr;column-gap:18px}
+
+.ev .options{font-size:.92rem;opacity:.85}
+.ev-ctas{display:flex;flex-wrap:wrap;gap:10px;margin-top:auto}
+.ev-ctas .btn{align-self:auto;margin-top:0}
+.plaquette{margin-top:28px}
+.plaquette-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;margin-bottom:16px}
+.plaquette-head h3{font-size:clamp(1.6rem,3vw,2.1rem)}
+.plaquette-head a{font-weight:700;color:var(--bordeaux)}
+.pages{display:grid;grid-auto-flow:column;grid-auto-columns:min(78%,300px);gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px}
+@media (min-width:1000px){.pages{grid-auto-flow:row;grid-template-columns:repeat(4,1fr);overflow:visible}}
+.pages a{display:block;scroll-snap-align:start;border-radius:14px;overflow:hidden;box-shadow:0 14px 30px -16px rgba(0,0,0,.45);transition:transform .2s}
+.pages a:hover{transform:translateY(-4px)}
+.pages img{display:block;width:100%;height:auto;aspect-ratio:900/1275;object-fit:cover}
+
 /* FAQ */
 .faq{display:grid;gap:10px;max-width:820px}
 .faq details{border-radius:16px;background:var(--surface);border:1px solid var(--ligne);padding:0 22px}
@@ -241,6 +261,7 @@ footer{background:var(--sapin-3);color:#FFF8EC}
 .cta-final .ctas{display:flex;flex-wrap:wrap;gap:12px}
 .pied .wrap{display:grid;gap:30px;padding-block:44px}
 @media (min-width:820px){.pied .wrap{grid-template-columns:1.3fr 1fr 1fr 1fr}}
+.pied-logo{display:block;width:120px;height:auto;margin-bottom:16px}
 .pied h4{font:700 1.15rem/1 var(--f-titre);margin:0 0 12px;color:var(--or)}
 .pied p{font-size:.94rem;opacity:.82;line-height:1.7}
 .pied a{text-underline-offset:3px}
@@ -264,7 +285,7 @@ footer{background:var(--sapin-3);color:#FFF8EC}
 
 <header class="top">
   <div class="wrap">
-    <a class="logo" href="#accueil" aria-label="Amore di Sicilia, accueil"><span class="mark" aria-hidden="true">A</span><span class="nom">Amore <i>di</i> Sicilia</span></a>
+    <a class="logo" href="#accueil" aria-label="Amore di Sicilia, accueil"><img class="mark" src="img/logo.webp" alt="" width="512" height="512"><span class="nom">Amore <i>di</i> Sicilia</span></a>
     <nav aria-label="Navigation principale">
       <a href="#offres">Offres</a>
       <a href="#carte">La carte</a>
@@ -284,7 +305,7 @@ footer{background:var(--sapin-3);color:#FFF8EC}
     <div class="wrap">
       <div>
         <p class="label">Saint-Memmie · Châlons-en-Champagne</p>
-        <h1>La Sicile,<br><em>ce soir</em> chez vous.</h1>
+        <h1>L’Italie,<br><em>ce soir</em> chez vous.</h1>
         <p class="lead">Pinse croustillantes, arancini roulés à la main et cannoli garnis minute. Tout est fait maison, à 5 minutes de Châlons.</p>
         <div class="ctas">
           <a class="btn btn-bord" href="tel:+33676818903">
@@ -461,6 +482,7 @@ footer{background:var(--sapin-3);color:#FFF8EC}
         </div>
       </div>
       <div class="rv">
+        <img class="sceau" src="img/logo-creme.webp" alt="Logo Amore di Sicilia, traiteur italien : la Trinacria coiffée d'une toque" width="552" height="600" loading="lazy">
         <div class="chiffres">
           <div class="chiffre"><b>11</b><span>pinse à la carte</span></div>
           <div class="chiffre"><b>4</b><span>arancini roulés main</span></div>
@@ -482,9 +504,16 @@ footer{background:var(--sapin-3);color:#FFF8EC}
           <svg class="vespa" viewBox="0 0 120 80" fill="none" stroke="#FFF8EC" stroke-width="4" aria-hidden="true"><circle cx="24" cy="62" r="14"/><circle cx="96" cy="62" r="14"/><path d="M38 62h44M30 30h40v32M70 30l14 32M70 30h-6l-4-12h-8"/></svg>
           <p class="label">Location</p>
           <h3>Le Piaggio bar italien</h3>
-          <p>Notre triporteur Piaggio se transforme en bar ambulant pour vos mariages, anniversaires, soirées privées et événements d'entreprise.</p>
-          <div class="villes"><span>Châlons</span><span>Reims</span><span>Épernay</span><span>Vitry-le-François</span><span>Sainte-Menehould</span></div>
-          <a class="btn btn-creme" href="https://tally.so/r/n9aPz5" target="_blank" rel="noopener">Demander un devis</a>
+          <p>Notre triporteur Piaggio, entièrement équipé, se monte en 5 minutes en intérieur comme en extérieur. Ambiance festive garantie pour vos mariages, anniversaires, soirées privées, événements d'entreprise, festivals et inaugurations.</p>
+          <ul class="inclus">
+            <li>3 tireuses pression</li><li>Système audio JBL</li><li>Grand écran LED</li><li>Photobooth</li><li>Machine à fumée</li><li>Ambiance lumineuse</li><li>Équipe professionnelle</li><li>Service clé en main</li>
+          </ul>
+          <p class="options"><b>En option, sur devis :</b> fûts de bière et softs, 3 gammes de Spritz, apéro italien, planches de charcuteries et fromages, transport hors agglomération.</p>
+          <div class="villes"><span>Châlons</span><span>Reims</span><span>Épernay</span><span>Vitry-le-François</span><span>Sainte-Menehould</span><span>Marne</span></div>
+          <div class="ev-ctas">
+            <a class="btn btn-creme" href="https://tally.so/r/n9aPz5" target="_blank" rel="noopener">Demander un devis</a>
+            <a class="btn btn-ghost" href="plaquette-piaggio.pdf" target="_blank" rel="noopener">Télécharger la plaquette (PDF)</a>
+          </div>
         </article>
         <article class="ev traiteur rv">
           <p class="label">Traiteur</p>
@@ -498,6 +527,18 @@ footer{background:var(--sapin-3);color:#FFF8EC}
           </ul>
           <a class="btn btn-bord" href="mailto:amoredisicilia.traiteur@gmail.com?subject=Demande%20de%20devis%20traiteur">Demander un devis</a>
         </article>
+      </div>
+      <div class="plaquette rv">
+        <div class="plaquette-head">
+          <h3>La plaquette du Piaggio bar</h3>
+          <a href="plaquette-piaggio.pdf" target="_blank" rel="noopener">Ouvrir en PDF →</a>
+        </div>
+        <div class="pages" tabindex="0" aria-label="Pages de la plaquette, faire défiler">
+          <a href="img/piaggio-1.webp" target="_blank" rel="noopener"><img src="img/piaggio-1.webp" alt="Votre bar mobile italien, louez-moi : le Piaggio de nuit avec écran LED et guirlandes" width="900" height="1275" loading="lazy"></a>
+          <a href="img/piaggio-2.webp" target="_blank" rel="noopener"><img src="img/piaggio-2.webp" alt="Le bar mobile italien : ambiance festive, installation en 5 minutes, concept 100 % italien" width="900" height="1275" loading="lazy"></a>
+          <a href="img/piaggio-3.webp" target="_blank" rel="noopener"><img src="img/piaggio-3.webp" alt="Le Piaggio Évent : 3 tireuses, photobooth, pack média, ce qui est inclus et les options sur devis" width="900" height="1275" loading="lazy"></a>
+          <a href="img/piaggio-4.webp" target="_blank" rel="noopener"><img src="img/piaggio-4.webp" alt="Idéal pour tous vos événements : mariages, anniversaires, entreprises, festivals ; zone d'intervention et contact" width="900" height="1275" loading="lazy"></a>
+        </div>
       </div>
     </div>
   </section>
@@ -533,7 +574,7 @@ footer{background:var(--sapin-3);color:#FFF8EC}
   </div>
   <div class="pied">
     <div class="wrap">
-      <div><h4>Amore di Sicilia</h4><p>Traiteur italien, cuisine sicilienne faite maison.<br>25 rue des Vieilles Postes<br>51470 Saint-Memmie</p></div>
+      <div><img class="pied-logo" src="img/logo-creme.webp" alt="Amore di Sicilia" width="552" height="600" loading="lazy"><p>Traiteur italien, cuisine sicilienne faite maison.<br>25 rue des Vieilles Postes<br>51470 Saint-Memmie</p></div>
       <div><h4>Horaires</h4><p>Mercredi – dimanche<br>19h – 22h<br>Fermé lundi et mardi</p></div>
       <div><h4>Contact</h4><p>06 76 81 89 03<br>amoredisicilia.traiteur@gmail.com</p></div>
       <div><h4>Suivez-nous</h4><p><a href="https://www.instagram.com/amore.disicilia/" target="_blank" rel="noopener">Instagram @amore.disicilia</a><br><a href="https://www.tiktok.com/@amoredisicilia" target="_blank" rel="noopener">TikTok @amoredisicilia</a><br><a href="https://www.ubereats.com/store-browse-uuid/445ca3c5-136f-5aaa-9697-f885b4c8e107?diningMode=DELIVERY" target="_blank" rel="noopener">Uber Eats</a></p></div>
