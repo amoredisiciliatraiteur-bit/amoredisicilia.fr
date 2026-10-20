@@ -652,5 +652,25 @@ footer{background:var(--sapin-3);color:#FFF8EC}
 })();
 </script>
 
+<div id="appel" hidden style="position:fixed;inset:0;z-index:9999;background:rgba(8,42,23,.6);display:grid;place-items:end center;padding:16px">
+  <div style="background:#FFF8EC;color:#0E3F24;border-radius:20px;padding:22px;max-width:420px;width:100%;display:grid;gap:12px;text-align:center;font-family:Figtree,Arial,sans-serif">
+    <p style="margin:0;font-weight:700">Appelez-nous au</p>
+    <p style="margin:0;font:800 2rem/1.1 Figtree,Arial,sans-serif;letter-spacing:.02em;user-select:all">06 76 81 89 03</p>
+    <a href="tel:+33676818903" style="display:block;background:#9D0E20;color:#fff;border-radius:14px;padding:15px;font-weight:800;text-decoration:none">Appeler</a>
+    <button type="button" id="appel-copie" style="background:transparent;border:2px solid #E4D5B7;border-radius:14px;padding:13px;font:800 1rem Figtree,Arial,sans-serif;color:#0E3F24">Copier le numéro</button>
+    <p style="margin:0;font-size:.85rem;color:#4F6A59">Si l'appel ne se lance pas, c'est l'application Facebook ou Instagram qui le bloque : copiez le numéro, ou ouvrez le site dans Safari (menu ··· → Ouvrir dans le navigateur).</p>
+    <button type="button" id="appel-ferme" style="background:none;border:0;font:700 .95rem Figtree,Arial,sans-serif;color:#4F6A59;padding:6px">Fermer</button>
+  </div>
+</div>
+<script>
+(function(){
+  var ua=navigator.userAgent||'';if(!/FBAN|FBAV|FB_IAB|Instagram|Messenger|TikTok|musical_ly|Snapchat/i.test(ua))return;
+  var box=document.getElementById('appel');
+  document.addEventListener('click',function(e){var a=e.target.closest('a[href^="tel:"]');if(!a||box.contains(a))return;e.preventDefault();box.hidden=false},true);
+  document.getElementById('appel-ferme').onclick=function(){box.hidden=true};
+  box.addEventListener('click',function(e){if(e.target===box)box.hidden=true});
+  document.getElementById('appel-copie').onclick=function(){var b=this;try{navigator.clipboard.writeText('0676818903').then(function(){b.textContent='Numéro copié ✓'})}catch(x){b.textContent='06 76 81 89 03'}};
+})();
+</script>
 </body>
 </html>
