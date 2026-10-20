@@ -137,7 +137,7 @@ textarea{min-height:64px;resize:vertical}
         <option>Autre</option>
       </select></label>
       <label for="parrain" id="l-parrain" hidden>Prénom de votre parrain<input id="parrain" placeholder="Ex. : Marco"></label>
-      <label for="note">Remarque (facultatif)<textarea id="note" placeholder="Allergie, sans roquette, code arancino offert…"></textarea></label>
+      <label for="note">Remarque (facultatif)<textarea id="note" placeholder="Choix des menus (ex. : Regina + Norma, 2 Coca), allergie, sans roquette…"></textarea></label>
       <p class="erreur" id="err" hidden></p>
       <button class="btn btn-wa" id="wa" type="button"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3a.5.5 0 0 0 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg>Envoyer par WhatsApp</button>
       <button class="btn btn-sms" id="sms" type="button">Envoyer par SMS</button>
@@ -154,7 +154,9 @@ textarea{min-height:64px;resize:vertical}
   var TEL='33676818903';
   var P=[
     {cat:'offres',titre:'Menus',items:[
-      {id:'famiglia',nom:'Menu Famiglia',px:35,desc:'2 pinse + 2 arancini + 1 boisson 1,25 L (hors Mortadella et Oro di Sicilia)',menu:true}
+      {id:'solo',nom:'Menu Solo',px:17,desc:'1 pinsa + 1 canette 33 cl + 1 dessert (hors Mortadella et Oro di Sicilia). Précisez vos choix en remarque.',menu:true},
+      {id:'duo',nom:'Menu Duo',px:28,desc:'2 pinse + 2 canettes 33 cl (hors Mortadella et Oro di Sicilia). Précisez vos choix en remarque.',menu:true},
+      {id:'famiglia',nom:'Menu Famiglia',px:35,desc:'2 pinse + 2 arancini + 1 boisson 1,25 L (hors Mortadella et Oro di Sicilia). Précisez vos choix en remarque.',menu:true}
     ]},
     {cat:'pinse',titre:'Pinse',items:[
       {id:'margherita',nom:'Margherita',px:10,img:'p-margherita',desc:'Sauce tomate, fior di latte',pinsa:true},
