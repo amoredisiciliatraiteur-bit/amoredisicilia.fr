@@ -136,7 +136,7 @@ textarea{min-height:64px;resize:vertical}
         <option>Je suis déjà client</option>
         <option>Autre</option>
       </select></label>
-      <label for="parrain" id="l-parrain" hidden>Prénom et téléphone de votre parrain<input id="parrain" placeholder="Ex. : Marco, 06 12 34 56 78"></label>
+      <label for="parrain" id="l-parrain" hidden>Prénom de votre parrain<input id="parrain" placeholder="Ex. : Marco"></label>
       <label for="note">Remarque (facultatif)<textarea id="note" placeholder="Allergie, sans roquette, code arancino offert…"></textarea></label>
       <p class="erreur" id="err" hidden></p>
       <button class="btn btn-wa" id="wa" type="button"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3a.5.5 0 0 0 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg>Envoyer par WhatsApp</button>
@@ -270,12 +270,14 @@ textarea{min-height:64px;resize:vertical}
     try{localStorage.setItem('amore-client',JSON.stringify({p:p,t:t}))}catch(x){}
     var j=jours[+J.value];
     var m='🍕 Nouvelle commande à emporter\n'+c.lignes.map(function(l){return '• '+l.q+' × '+l.nom+' — '+eur(l.px)}).join('\n')+
-      (c.remise?'\n🎁 '+c.offertes+' pinsa offerte (2+1) — −'+eur(c.remise):'')+'\nTotal : '+eur(c.total)+
+      (c.remise?'\n🎁 '+c.offertes+' pinsa offerte (2+1) — −'+eur(c.remise):'')+'\nTotal : '+eur(c.total)+(document.getElementById('source').value.indexOf('parrain')>0?'\n🎁 Parrainage : 1er arancino offert (à ajouter gratuitement)':'')+
       '\n\nRetrait : '+j.label+' à '+H.value+'\nNom : '+p+'\nTél : '+t+(document.getElementById('source').value?'\nNous a connus : '+document.getElementById('source').value+(document.getElementById('source').value.indexOf('parrain')>0&&document.getElementById('parrain').value.trim()?' ('+document.getElementById('parrain').value.trim()+')':''):'')+(document.getElementById('note').value.trim()?'\nRemarque : '+document.getElementById('note').value.trim():'')+'\n\n(Envoyé depuis amoredisicilia.fr)';
     return m;
   }
   var S=document.getElementById('source');S.addEventListener('change',function(){document.getElementById('l-parrain').hidden=S.value.indexOf('parrain')<0});
-  try{var cl=JSON.parse(localStorage.getItem('amore-client')||'null');if(cl&&cl.p&&!S.value)S.value='Je suis déjà client'}catch(x){}
+  var PR=new URLSearchParams(location.search).get('parrain');
+  if(PR){S.value="Un ami m'a parrainé";document.getElementById('parrain').value=PR.slice(0,30);document.getElementById('l-parrain').hidden=false}
+  else{try{var cl=JSON.parse(localStorage.getItem('amore-client')||'null');if(cl&&cl.p&&!S.value)S.value='Je suis déjà client'}catch(x){}}
   function fini(){document.getElementById('fait').hidden=false}
   document.getElementById('wa').addEventListener('click',function(){var m=message();if(!m)return;location.href='https://wa.me/'+TEL+'?text='+encodeURIComponent(m);fini()});
   document.getElementById('sms').addEventListener('click',function(){var m=message();if(!m)return;var ios=/iPhone|iPad|iPod/.test(navigator.userAgent);location.href='sms:+'+TEL+(ios?'&':'?')+'body='+encodeURIComponent(m);fini()});

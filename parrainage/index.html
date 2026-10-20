@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Parrainez un ami · Amore di Sicilia</title>
+<link rel="icon" href="/img/logo.webp">
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,800;1,6..96,500&family=Figtree:wght@500;600;700;800&display=swap">
+<style>
+:root{--bg:#FFF8EC;--fg:#0E3F24;--surface:#fff;--ligne:#E4D5B7;--doux:#4F6A59;--bordeaux:#9D0E20;--or:#E2AE48;--ok:#1E7A45;--f-titre:"Bodoni Moda",Didot,Georgia,serif;--f-texte:"Figtree","Helvetica Neue",Arial,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0A1C12;--fg:#F4EBD9;--surface:#11281A;--ligne:#24432F;--doux:#B3C3B8;--bordeaux:#E0566A;--ok:#5BD38A;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0A1C12;--fg:#F4EBD9;--surface:#11281A;--ligne:#24432F;--doux:#B3C3B8;--bordeaux:#E0566A;--ok:#5BD38A;color-scheme:dark}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--fg);font:500 17px/1.5 var(--f-texte)}
+.w{max-width:520px;margin:0 auto;padding:28px max(16px,env(safe-area-inset-left,0px)) 48px max(16px,env(safe-area-inset-right,0px));display:grid;gap:20px}
+.logo{display:flex;align-items:center;gap:10px;color:inherit;text-decoration:none;font:800 1.1rem var(--f-titre)}
+.logo img{width:44px;height:44px;border-radius:50%}
+h1{font:800 clamp(2rem,8vw,2.6rem)/1.04 var(--f-titre);margin:0;text-wrap:balance}
+h1 em{font-style:italic;font-weight:500;color:var(--bordeaux)}
+p{margin:0}.doux{color:var(--doux)}
+.photo{border-radius:20px;overflow:hidden;aspect-ratio:3/2}.photo img{width:100%;height:100%;object-fit:cover;display:block}
+.cad{background:var(--surface);border:1.5px solid var(--ligne);border-radius:18px;padding:18px;display:grid;gap:12px}
+label{font-weight:700;font-size:.9rem;display:grid;gap:6px}
+input{font:600 1.1rem var(--f-texte);padding:14px 16px;border-radius:14px;border:2px solid var(--ligne);background:var(--bg);color:var(--fg);width:100%}
+input:focus{outline:none;border-color:var(--bordeaux)}:focus-visible{outline:3px solid var(--or);outline-offset:2px}
+.btn{display:flex;align-items:center;justify-content:center;gap:10px;font:800 1.05rem/1 var(--f-texte);border:0;border-radius:14px;padding:17px 20px;cursor:pointer;text-decoration:none;background:var(--bordeaux);color:#fff;width:100%}
+.btn.wa{background:#1E9E55}.btn.sec{background:transparent;color:var(--fg);border:2px solid var(--ligne)}
+.btns{display:grid;gap:10px}
+ol{margin:0;padding-left:1.2em;display:grid;gap:6px}
+.lien{font:600 .9rem var(--f-texte);word-break:break-all;color:var(--doux)}
+.petit{font-size:.82rem;color:var(--doux)}
+</style>
+</head><body><main class="w">
+<a class="logo" href="/"><img src="/img/logo.webp" alt="">Amore di Sicilia</a>
+<h1>Offrez un arancino <em>à un ami</em>.</h1>
+<p class="doux">Envoyez votre lien à un ami qui ne nous connaît pas encore : son 1<sup>er</sup> arancino est offert, et vous recevez le vôtre à votre prochaine commande.</p>
+<div class="cad">
+  <label for="pre">Votre prénom<input id="pre" autocomplete="given-name" placeholder="Ex. : Marco"></label>
+  <div class="btns">
+    <button class="btn wa" id="b-wa" type="button">Envoyer par WhatsApp</button>
+    <button class="btn" id="b-sms" type="button">Envoyer par SMS</button>
+    <button class="btn sec" id="b-plus" type="button">Autre (Messenger, copier le lien…)</button>
+  </div>
+  <p class="lien" id="lien" hidden></p>
+  <p class="petit" id="msg" aria-live="polite"></p>
+</div>
+<ol class="doux">
+  <li>Votre ami ouvre le lien et passe sa 1<sup>re</sup> commande : son arancino est offert.</li>
+  <li>À votre prochaine commande, dites-nous votre prénom : le vôtre est offert aussi.</li>
+</ol>
+<p class="petit">Un arancino offert par nouveau client. À retirer au labo, 25 rue des Vieilles Postes, Saint-Memmie (mer.–dim., 19h–22h).</p>
+</main>
+<script>
+(function(){
+  var P=document.getElementById('pre'),M=document.getElementById('msg'),L=document.getElementById('lien');
+  try{var c=JSON.parse(localStorage.getItem('amore-client')||'null');if(c&&c.p)P.value=c.p}catch(e){}
+  function lien(){return 'https://amoredisicilia.fr/ami/?de='+encodeURIComponent(P.value.trim())}
+  function texte(){return 'Je te recommande Amore di Sicilia : pinse et arancini siciliens faits maison à Saint-Memmie, un régal ! Avec mon lien, ton 1er arancino est offert : '+lien()}
+  function ok(){if(!P.value.trim()){M.textContent='Indiquez votre prénom pour que votre ami sache que ça vient de vous.';P.focus();return false}M.textContent='';L.hidden=false;L.textContent=lien();return true}
+  document.getElementById('b-wa').onclick=function(){if(ok())location.href='https://wa.me/?text='+encodeURIComponent(texte())};
+  document.getElementById('b-sms').onclick=function(){if(!ok())return;var ios=/iPhone|iPad|iPod/.test(navigator.userAgent);location.href='sms:'+(ios?'&':'?')+'body='+encodeURIComponent(texte())};
+  document.getElementById('b-plus').onclick=function(){if(!ok())return;
+    if(navigator.share){navigator.share({title:'Amore di Sicilia',text:texte()}).catch(function(){});return}
+    try{navigator.clipboard.writeText(texte()).then(function(){M.textContent='Message copié : collez-le où vous voulez.'})}catch(e){M.textContent='Copiez le lien ci-dessus.'}};
+})();
+</script>
+</body></html>
