@@ -65,6 +65,9 @@ p{margin:0}
 .qte button.moins{background:var(--creme-2);color:var(--fg)}
 .qte output{min-width:20px;text-align:center;font-weight:800;font-variant-numeric:tabular-nums}
 .choix{font:600 .82rem/1.2 var(--f-texte);padding:6px 8px;border-radius:10px;border:1px solid var(--ligne);background:var(--bg);color:var(--fg);max-width:100%}
+.slots{display:grid;grid-template-columns:1fr 1fr;gap:6px 8px;margin:4px 0}
+.slots label{display:grid;gap:2px;font-size:.72rem;font-weight:700;color:var(--doux);text-transform:uppercase;letter-spacing:.03em}
+.slots .choix{width:100%;text-transform:none;letter-spacing:0}
 .recap{background:var(--surface);border:1px solid var(--ligne);border-radius:22px;padding:20px;display:grid;gap:14px}
 @media (min-width:980px){.recap{position:sticky;top:130px}}
 .recap h2{font-size:1.5rem}
@@ -154,9 +157,9 @@ textarea{min-height:64px;resize:vertical}
   var TEL='33676818903';
   var P=[
     {cat:'offres',titre:'Menus',items:[
-      {id:'solo',nom:'Menu Solo',px:17,desc:'1 pinsa + 1 canette 33 cl + 1 dessert. Mortadella ou Oro di Sicilia : +1,50 €. Précisez vos choix en remarque.',menu:true,choix:['Sans Mortadella ni Oro','Avec Mortadella ou Oro (+1,50 €)'],sup:[0,1.5]},
-      {id:'duo',nom:'Menu Duo',px:28,desc:'2 pinse + 2 canettes 33 cl. Mortadella ou Oro di Sicilia : +1,50 € par pinsa. Précisez vos choix en remarque.',menu:true,choix:['Sans Mortadella ni Oro','1 Mortadella ou Oro (+1,50 €)','2 Mortadella ou Oro (+3 €)'],sup:[0,1.5,3]},
-      {id:'famiglia',nom:'Menu Famiglia',px:35,desc:'2 pinse + 2 arancini + 1 boisson 1,25 L. Mortadella ou Oro di Sicilia : +1,50 € par pinsa. Précisez vos choix en remarque.',menu:true,choix:['Sans Mortadella ni Oro','1 Mortadella ou Oro (+1,50 €)','2 Mortadella ou Oro (+3 €)'],sup:[0,1.5,3]}
+      {id:'solo',nom:'Menu Solo',px:17,desc:'1 pinsa + 1 canette 33 cl + 1 dessert. Mortadella ou Oro di Sicilia : +1,50 €.',menu:true,slots:[['Pinsa','P'],['Canette','C'],['Dessert','D']]},
+      {id:'duo',nom:'Menu Duo',px:28,desc:'2 pinse + 2 canettes 33 cl. Mortadella ou Oro di Sicilia : +1,50 € par pinsa.',menu:true,slots:[['Pinsa 1','P'],['Pinsa 2','P'],['Canette 1','C'],['Canette 2','C']]},
+      {id:'famiglia',nom:'Menu Famiglia',px:35,desc:'2 pinse + 2 arancini + 1 boisson 1,25 L. Mortadella ou Oro di Sicilia : +1,50 € par pinsa.',menu:true,slots:[['Pinsa 1','P'],['Pinsa 2','P'],['Arancino 1','A'],['Arancino 2','A'],['Boisson 1,25 L','B']]}
     ]},
     {cat:'pinse',titre:'Pinse',items:[
       {id:'margherita',nom:'Margherita',px:10,img:'p-margherita',desc:'Sauce tomate, fior di latte',pinsa:true},
@@ -190,9 +193,16 @@ textarea{min-height:64px;resize:vertical}
     ]}
   ];
   var idx={}; P.forEach(function(c){c.items.forEach(function(i){idx[i.id]=i})});
+  var SUP=' (+1,50 €)';
+  var OPTS={
+    P:P[1].items.map(function(i){return i.nom+(i.px>12?SUP:'')}),
+    C:idx.b33.choix,B:idx.b125.choix,
+    A:P[2].items.map(function(i){return i.nom.replace('Arancino ','')}),
+    D:['Cannolo pistache','Cannolo chocolat'].concat(idx.tiramisu.choix.map(function(x){return 'Tiramisù '+x.toLowerCase()}))
+  };
   var panier={}; // clé id|choix -> qte
-  try{panier=JSON.parse(localStorage.getItem('amore-panier')||'{}')||{}}catch(e){}
-  function save(){try{localStorage.setItem('amore-panier',JSON.stringify(panier))}catch(e){}}
+  try{panier=JSON.parse(localStorage.getItem('amore-panier2')||'{}')||{}}catch(e){}
+  function save(){try{localStorage.setItem('amore-panier2',JSON.stringify(panier))}catch(e){}}
   function eur(n){return n.toFixed(2).replace('.',',')+' €'}
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 
@@ -203,6 +213,7 @@ textarea{min-height:64px;resize:vertical}
     c.items.forEach(function(i){
       html+='<article class="prod'+(i.img?'':' sans-photo')+'">'+(i.img?'<img src="/img/'+i.img+'.webp" alt="" width="96" height="96" loading="lazy">':'')+
         '<div class="info"><span class="nom">'+esc(i.nom)+'</span>'+(i.desc?'<span class="desc">'+esc(i.desc)+'</span>':'')+
+        (i.slots?'<div class="slots">'+i.slots.map(function(sl){return '<label><span>'+esc(sl[0])+'</span><select class="choix" data-choix="'+i.id+'">'+OPTS[sl[1]].map(function(x){return '<option>'+esc(x)+'</option>'}).join('')+'</select></label>'}).join('')+'</div>':'')+
         (i.choix?'<select class="choix" data-choix="'+i.id+'" aria-label="Choix pour '+esc(i.nom)+'">'+i.choix.map(function(x){return '<option>'+esc(x)+'</option>'}).join('')+'</select>':'')+
         '<div class="bas"><span class="px">'+eur(i.px)+'</span><span class="qte"><button class="moins" type="button" data-moins="'+i.id+'" aria-label="Retirer '+esc(i.nom)+'">−</button><output data-q="'+i.id+'">0</output><button type="button" data-plus="'+i.id+'" aria-label="Ajouter '+esc(i.nom)+'">+</button></span></div></div></article>';
     });
@@ -210,7 +221,7 @@ textarea{min-height:64px;resize:vertical}
   });
   document.getElementById('produits').innerHTML=html;
 
-  function cle(id){var s=document.querySelector('[data-choix="'+id+'"]');return id+(s?'|'+s.value:'')}
+  function cle(id){var v=[].map.call(document.querySelectorAll('[data-choix="'+id+'"]'),function(s){return s.value});return id+(v.length?'|'+v.join(' · '):'')}
   document.getElementById('produits').addEventListener('click',function(e){
     var p=e.target.closest('[data-plus]'),m=e.target.closest('[data-moins]');
     if(p){var k=cle(p.dataset.plus);panier[k]=(panier[k]||0)+1}
@@ -225,8 +236,8 @@ textarea{min-height:64px;resize:vertical}
     Object.keys(panier).forEach(function(k){
       var parts=k.split('|'),i=idx[parts[0]];if(!i)return;
       var q=panier[k];nb+=q;
-      var pu=i.px+(i.sup&&parts[1]?(i.sup[i.choix.indexOf(parts[1])]||0):0);
-      lignes.push({q:q,nom:i.nom+(parts[1]&&!(i.sup&&parts[1]===i.choix[0])?' ('+parts[1]+')':''),px:pu*q});
+      var pu=i.px+(i.menu&&parts[1]?parts[1].split(SUP).length-1:0)*1.5;
+      lignes.push({q:q,nom:i.nom+(parts[1]?' ('+parts[1].split(SUP).join(' +1,50 €')+')':''),px:pu*q});
       total+=pu*q;
       if(i.pinsa)for(var n=0;n<q;n++)pinsePx.push(i.px);
     });
