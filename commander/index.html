@@ -68,6 +68,9 @@ p{margin:0}
 .slots{display:grid;grid-template-columns:1fr 1fr;gap:6px 8px;margin:4px 0}
 .slots label{display:grid;gap:2px;font-size:.72rem;font-weight:700;color:var(--doux);text-transform:uppercase;letter-spacing:.03em}
 .slots .choix{width:100%;text-transform:none;letter-spacing:0}
+.prod.epuise{opacity:.55}
+.prod.epuise .nom::after{content:' · Épuisé ce soir';color:var(--bordeaux);font-size:.8rem;font-weight:800}
+.qte button:disabled{opacity:.35;cursor:not-allowed}
 .recap{background:var(--surface);border:1px solid var(--ligne);border-radius:22px;padding:20px;display:grid;gap:14px}
 @media (min-width:980px){.recap{position:sticky;top:130px}}
 .recap h2{font-size:1.5rem}
@@ -194,12 +197,13 @@ textarea{min-height:64px;resize:vertical}
   ];
   var idx={}; P.forEach(function(c){c.items.forEach(function(i){idx[i.id]=i})});
   var SUP=' (+1,50 €)';
-  var OPTS={
-    P:P[1].items.map(function(i){return i.nom+(i.px>12?SUP:'')}),
-    C:idx.b33.choix,B:idx.b125.choix,
-    A:P[2].items.map(function(i){return i.nom.replace('Arancino ','')}),
-    D:['Cannolo pistache','Cannolo chocolat'].concat(idx.tiramisu.choix.map(function(x){return 'Tiramisù '+x.toLowerCase()}))
-  };
+  var OPTS={},OPTC={};
+  function opt(k,arr){OPTS[k]=arr.map(function(a){return a[0]});OPTC[k]=arr.map(function(a){return a[1]})}
+  opt('P',P[1].items.map(function(i){return [i.nom+(i.px>12?SUP:''),i.id]}));
+  opt('C',idx.b33.choix.map(function(x){return [x,'b33:'+x]}));
+  opt('B',idx.b125.choix.map(function(x){return [x,'b125:'+x]}));
+  opt('A',P[2].items.map(function(i){return [i.nom.replace('Arancino ',''),i.id]}));
+  opt('D',[['Cannolo pistache','c-pistache'],['Cannolo chocolat','c-chocolat']].concat(idx.tiramisu.choix.map(function(x){return ['Tiramisù '+x.toLowerCase(),'tiramisu:'+x]})));
   var panier={}; // clé id|choix -> qte
   try{panier=JSON.parse(localStorage.getItem('amore-panier2')||'{}')||{}}catch(e){}
   function save(){try{localStorage.setItem('amore-panier2',JSON.stringify(panier))}catch(e){}}
@@ -211,10 +215,10 @@ textarea{min-height:64px;resize:vertical}
   P.forEach(function(c){
     html+='<section class="cat" id="c-'+c.cat+'"><h2>'+c.titre+(c.note?' <small>'+c.note+'</small>':'')+'</h2><div class="grid">';
     c.items.forEach(function(i){
-      html+='<article class="prod'+(i.img?'':' sans-photo')+'">'+(i.img?'<img src="/img/'+i.img+'.webp" alt="" width="96" height="96" loading="lazy">':'')+
+      html+='<article data-prod="'+i.id+'" class="prod'+(i.img?'':' sans-photo')+'">'+(i.img?'<img src="/img/'+i.img+'.webp" alt="" width="96" height="96" loading="lazy">':'')+
         '<div class="info"><span class="nom">'+esc(i.nom)+'</span>'+(i.desc?'<span class="desc">'+esc(i.desc)+'</span>':'')+
-        (i.slots?'<div class="slots">'+i.slots.map(function(sl){return '<label><span>'+esc(sl[0])+'</span><select class="choix" data-choix="'+i.id+'">'+OPTS[sl[1]].map(function(x){return '<option>'+esc(x)+'</option>'}).join('')+'</select></label>'}).join('')+'</div>':'')+
-        (i.choix?'<select class="choix" data-choix="'+i.id+'" aria-label="Choix pour '+esc(i.nom)+'">'+i.choix.map(function(x){return '<option>'+esc(x)+'</option>'}).join('')+'</select>':'')+
+        (i.slots?'<div class="slots">'+i.slots.map(function(sl){return '<label><span>'+esc(sl[0])+'</span><select class="choix" data-choix="'+i.id+'">'+OPTS[sl[1]].map(function(x,n){return '<option data-code="'+esc(OPTC[sl[1]][n])+'">'+esc(x)+'</option>'}).join('')+'</select></label>'}).join('')+'</div>':'')+
+        (i.choix?'<select class="choix" data-choix="'+i.id+'" aria-label="Choix pour '+esc(i.nom)+'">'+i.choix.map(function(x){return '<option data-code="'+esc(i.id+':'+x)+'">'+esc(x)+'</option>'}).join('')+'</select>':'')+
         '<div class="bas"><span class="px">'+eur(i.px)+'</span><span class="qte"><button class="moins" type="button" data-moins="'+i.id+'" aria-label="Retirer '+esc(i.nom)+'">−</button><output data-q="'+i.id+'">0</output><button type="button" data-plus="'+i.id+'" aria-label="Ajouter '+esc(i.nom)+'">+</button></span></div></div></article>';
     });
     html+='</div></section>';
@@ -230,6 +234,38 @@ textarea{min-height:64px;resize:vertical}
     save();rendre();
   });
   document.getElementById('produits').addEventListener('change',function(e){if(e.target.matches('[data-choix]'))rendre()});
+
+  // disponibilités (feuille Google Sheets « Disponibilités site »)
+  var EPUISE={};
+  function appliquerDispo(){
+    document.querySelectorAll('[data-prod]').forEach(function(a){
+      var id=a.dataset.prod,off=!!EPUISE[id];
+      a.querySelectorAll('select.choix').forEach(function(sel){
+        var libre=0;
+        [].forEach.call(sel.options,function(o){var e=!!EPUISE[o.dataset.code];o.disabled=e;o.textContent=o.textContent.replace(' — épuisé','')+(e?' — épuisé':'');if(!e)libre++});
+        if(sel.selectedOptions[0]&&sel.selectedOptions[0].disabled){var ok=[].find.call(sel.options,function(o){return !o.disabled});if(ok)sel.value=ok.value}
+        if(!libre)off=true;
+      });
+      a.classList.toggle('epuise',off);
+      var b=a.querySelector('[data-plus]');if(b)b.disabled=off;
+    });
+    Object.keys(panier).forEach(function(k){
+      var parts=k.split('|'),id=parts[0],bad=EPUISE[id];
+      var a=document.querySelector('[data-prod="'+id+'"]');
+      if(!bad&&a&&parts[1]){var v=parts[1].split(' · ');a.querySelectorAll('select.choix').forEach(function(sel,n){[].forEach.call(sel.options,function(o){if(o.value.replace(' — épuisé','')===v[n]&&EPUISE[o.dataset.code])bad=true})})}
+      if(bad)delete panier[k];
+    });
+    save();rendre();
+  }
+  function chargerDispo(){
+    fetch('https://docs.google.com/spreadsheets/d/1Lv3G4MdMRbT1xqKF9fNM8ZI9dTMbcyM7iXPLWZYLIes/gviz/tq?tqx=out:csv&gid=2035747275&t='+Date.now(),{credentials:'omit'})
+      .then(function(r){return r.ok?r.text():''}).then(function(t){
+        var e={};t.split('\n').slice(1).forEach(function(l){var c=l.match(/"((?:[^"]|"")*)"/g);if(c&&c.length>=3&&/TRUE/i.test(c[1]))e[c[2].slice(1,-1).replace(/""/g,'"')]=1});
+        EPUISE=e;appliquerDispo();
+      }).catch(function(){});
+  }
+  chargerDispo();
+  document.addEventListener('visibilitychange',function(){if(!document.hidden)chargerDispo()});
 
   function calcul(){
     var lignes=[],total=0,pinsePx=[],nb=0;
