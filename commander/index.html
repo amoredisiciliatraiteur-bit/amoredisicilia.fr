@@ -298,7 +298,7 @@ textarea{min-height:64px;resize:vertical}
   // créneaux
   var J=document.getElementById('jour'),H=document.getElementById('heure');
   function parisNow(){var d=new Date(new Date().toLocaleString('en-US',{timeZone:'Europe/Paris'}));return d}
-  var FERMETURES=['2026-11-01']; // jours de fermeture exceptionnelle (AAAA-MM-JJ)
+  var FERMETURES=['2026-11-01','2026-11-11']; // jours de fermeture exceptionnelle (AAAA-MM-JJ)
   function ymd(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
   function ouvert(d){var w=d.getDay();return (w===0||w>=3)&&FERMETURES.indexOf(ymd(d))<0}
   var now=parisNow(),jours=[];
