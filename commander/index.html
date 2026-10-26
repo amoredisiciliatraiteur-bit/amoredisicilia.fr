@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Commander à emporter · Amore di Sicilia</title>
-<meta name="description" content="Commandez vos pinse, arancini et cannoli à emporter chez Amore di Sicilia, Saint-Memmie. Choisissez votre heure de retrait, paiement sur place.">
+<meta name="description" content="Commandez vos pinse, arancini et cannoli à emporter chez Amore di Sicilia, Saint-Memmie. Choisissez votre heure de retrait, payez en ligne ou sur place.">
 <link rel="icon" href="/img/logo.webp">
 <link rel="canonical" href="https://amoredisicilia.fr/commander/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -116,7 +116,7 @@ textarea{min-height:64px;resize:vertical}
 <main class="wrap">
   <section class="intro">
     <h1>Commander <em>à emporter</em></h1>
-    <p>Choisissez vos produits et l'heure de retrait, puis envoyez la commande par WhatsApp ou SMS. On vous confirme par message. Paiement au retrait (CB ou espèces).</p>
+    <p>Choisissez vos produits et l'heure de retrait, puis payez en ligne par carte en toute sécurité, ou envoyez la commande par WhatsApp ou SMS et payez au retrait (CB ou espèces).</p>
     <div class="badges"><span>🎁 2 pinse achetées = la 3<sup>e</sup> offerte (calculé automatiquement)</span><span>📍 25 rue des Vieilles Postes, Saint-Memmie</span><span>🕖 Mer – dim, 19h – 22h</span></div>
   </section>
 
@@ -340,7 +340,7 @@ textarea{min-height:64px;resize:vertical}
   document.getElementById('wa').addEventListener('click',function(){var m=message();if(!m)return;location.href='https://wa.me/'+TEL+'?text='+encodeURIComponent(m);fini()});
   // Paiement en ligne (SumUp via le service Cloudflare « ads-paiement »)
   var PAY_URL='https://ads-paiement.amoredisicilia-traiteur.workers.dev';
-  var PAY_ON=false; // passer à true pour afficher le paiement à tous ; en attendant : ?paiement=test
+  var PAY_ON=true; // false = paiement en ligne masqué (sauf ?paiement=test)
   if(PAY_ON||new URLSearchParams(location.search).get('paiement')==='test')document.getElementById('bloc-cb').hidden=false;
   document.getElementById('cb').addEventListener('click',function(){
     var m=message();if(!m)return;
