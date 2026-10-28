@@ -319,7 +319,7 @@ textarea{min-height:64px;resize:vertical}
   function ouvert(d){var w=d.getDay();return (w===0||w>=3)&&FERMETURES.indexOf(ymd(d))<0}
   var now=parisNow(),jours=[];
   for(var k=0;k<8&&jours.length<4;k++){var d=new Date(now);d.setDate(now.getDate()+k);if(!ouvert(d))continue;
-    if(k===0&&(now.getHours()*60+now.getMinutes())>21*60+40)continue;
+    if(k===0&&(now.getHours()*60+now.getMinutes())+20>21*60+45)continue; // plus aucun créneau possible aujourd'hui
     jours.push({d:d,label:k===0?"Aujourd'hui":k===1?'Demain':d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})});}
   J.innerHTML=jours.map(function(j,i){return '<option value="'+i+'">'+j.label.charAt(0).toUpperCase()+j.label.slice(1)+'</option>'}).join('');
   function heures(){
