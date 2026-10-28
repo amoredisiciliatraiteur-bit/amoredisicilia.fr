@@ -319,13 +319,15 @@ textarea{min-height:64px;resize:vertical}
   function ouvert(d){var w=d.getDay();return (w===0||w>=3)&&FERMETURES.indexOf(ymd(d))<0}
   var now=parisNow(),jours=[];
   for(var k=0;k<8&&jours.length<4;k++){var d=new Date(now);d.setDate(now.getDate()+k);if(!ouvert(d))continue;
-    if(k===0&&(now.getHours()*60+now.getMinutes())+20>21*60+45)continue; // plus aucun créneau possible aujourd'hui
+    if(k===0&&(now.getHours()*60+now.getMinutes())>22*60)continue; // commandes acceptées jusqu'à 22h00
     jours.push({d:d,label:k===0?"Aujourd'hui":k===1?'Demain':d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'})});}
   J.innerHTML=jours.map(function(j,i){return '<option value="'+i+'">'+j.label.charAt(0).toUpperCase()+j.label.slice(1)+'</option>'}).join('');
   function heures(){
     var j=jours[+J.value],out=[],min=19*60;
-    if(j&&j.d.toDateString()===now.toDateString())min=Math.max(min,Math.ceil((now.getHours()*60+now.getMinutes()+20)/15)*15);
-    for(var t=min;t<=21*60+45;t+=15)out.push(String(Math.floor(t/60))+'h'+String(t%60).padStart(2,'0'));
+    var auj=j&&j.d.toDateString()===now.toDateString();
+    if(auj)min=Math.max(min,Math.ceil((now.getHours()*60+now.getMinutes())/15)*15);
+    if(auj)out.push('Dès que possible');
+    for(var t=min;t<=22*60;t+=15)out.push(String(Math.floor(t/60))+'h'+String(t%60).padStart(2,'0'));
     H.innerHTML=out.length?out.map(function(h){return '<option>'+h+'</option>'}).join(''):'<option value="">Plus de créneau</option>';
   }
   J.addEventListener('change',heures);heures();
@@ -341,7 +343,7 @@ textarea{min-height:64px;resize:vertical}
     var j=jours[+J.value];
     var m='🍕 Nouvelle commande à emporter\n'+c.lignes.map(function(l){return '• '+l.q+' × '+l.nom+' — '+eur(l.px)}).join('\n')+
       (c.remise?'\n🎁 '+c.offertes+' pinsa offerte (2+1) — −'+eur(c.remise):'')+'\nTotal : '+eur(c.total)+(document.getElementById('source').value.indexOf('parrain')>0?'\n🎁 Parrainage : 1er arancino offert (à ajouter gratuitement)':'')+
-      '\n\nRetrait : '+j.label+' à '+H.value+'\nNom : '+p+'\nTél : '+t+(document.getElementById('source').value?'\nNous a connus : '+document.getElementById('source').value+(document.getElementById('source').value.indexOf('parrain')>0&&document.getElementById('parrain').value.trim()?' ('+document.getElementById('parrain').value.trim()+')':''):'')+(document.getElementById('note').value.trim()?'\nRemarque : '+document.getElementById('note').value.trim():'')+'\n\n(Envoyé depuis amoredisicilia.fr)';
+      '\n\nRetrait : '+j.label+(H.value.indexOf('Dès')===0?', dès que possible':' à '+H.value)+'\nNom : '+p+'\nTél : '+t+(document.getElementById('source').value?'\nNous a connus : '+document.getElementById('source').value+(document.getElementById('source').value.indexOf('parrain')>0&&document.getElementById('parrain').value.trim()?' ('+document.getElementById('parrain').value.trim()+')':''):'')+(document.getElementById('note').value.trim()?'\nRemarque : '+document.getElementById('note').value.trim():'')+'\n\n(Envoyé depuis amoredisicilia.fr)';
     return m;
   }
   var S=document.getElementById('source');S.addEventListener('change',function(){document.getElementById('l-parrain').hidden=S.value.indexOf('parrain')<0});
@@ -358,7 +360,7 @@ textarea{min-height:64px;resize:vertical}
     var m=message();if(!m)return;
     var b=this,err=document.getElementById('err'),j=jours[+J.value];
     b.disabled=true;b.textContent='Redirection vers le paiement…';
-    fetch(PAY_URL+'/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({panier:panier,prenom:document.getElementById('prenom').value.trim(),retrait:j.label+' '+H.value})})
+    fetch(PAY_URL+'/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({panier:panier,prenom:document.getElementById('prenom').value.trim(),retrait:j.label+(H.value.indexOf('Dès')===0?', dès que possible':' '+H.value)})})
       .then(function(r){return r.json()}).then(function(d){
         if(!d.url)throw new Error(d.erreur||'Paiement indisponible');
         try{localStorage.setItem('amore-paiement',JSON.stringify({id:d.id,ref:d.ref,montant:d.montant,msg:m}))}catch(x){}
