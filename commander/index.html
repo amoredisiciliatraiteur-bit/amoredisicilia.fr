@@ -78,6 +78,9 @@ p{margin:0}
 .recap h2{font-size:1.5rem}
 .lignes{display:grid;gap:8px;font-size:.94rem}
 .ligne{display:flex;justify-content:space-between;gap:10px}
+.lq{display:flex;gap:6px;margin-top:4px}.lq button{font:700 .8rem/1 var(--f-texte);border:1px solid var(--ligne);background:var(--bg);color:var(--fg);border-radius:999px;min-width:30px;height:28px;padding:0 10px;cursor:pointer}.lq .lx{color:var(--bordeaux)}
+.vider{justify-self:start;font:700 .85rem/1 var(--f-texte);background:none;border:0;color:var(--bordeaux);text-decoration:underline;cursor:pointer;padding:6px 0}
+.ligne > span:first-child{display:flex;flex-direction:column}
 .ligne.remise{color:var(--ok);font-weight:700}
 .total{display:flex;justify-content:space-between;align-items:baseline;border-top:1px dashed var(--ligne);padding-top:12px;font:800 1.5rem/1 var(--f-titre);font-variant-numeric:tabular-nums}
 .vide{color:var(--doux);font-size:.94rem}
@@ -273,13 +276,22 @@ textarea{min-height:64px;resize:vertical}
   chargerDispo();
   document.addEventListener('visibilitychange',function(){if(!document.hidden)chargerDispo()});
 
+  document.getElementById('lignes').addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b)return;
+    if(b.id==='vider'){if(confirm('Vider tout le panier ?')){panier={};}}
+    else if(b.dataset.lm!=null){var k=b.dataset.lm;if(panier[k]){panier[k]--;if(!panier[k])delete panier[k]}}
+    else if(b.dataset.lp!=null){var k2=b.dataset.lp;panier[k2]=(panier[k2]||0)+1}
+    else if(b.dataset.lx!=null){delete panier[b.dataset.lx]}
+    else return;
+    save();rendre();
+  });
   function calcul(){
     var lignes=[],total=0,pinsePx=[],nb=0;
     Object.keys(panier).forEach(function(k){
       var parts=k.split('|'),i=idx[parts[0]];if(!i)return;
       var q=panier[k];nb+=q;
       var pu=i.px+(i.menu&&parts[1]?parts[1].split(SUP).length-1:0)*1.5;
-      lignes.push({q:q,nom:i.nom+(parts[1]?' ('+parts[1].split(SUP).join(' +1,50 €')+')':''),px:pu*q});
+      lignes.push({k:k,q:q,nom:i.nom+(parts[1]?' ('+parts[1].split(SUP).join(' +1,50 €')+')':''),px:pu*q});
       total+=pu*q;
       if(i.pinsa)for(var n=0;n<q;n++)pinsePx.push(i.px);
     });
@@ -293,7 +305,7 @@ textarea{min-height:64px;resize:vertical}
       var id=o.dataset.q,n=0;Object.keys(panier).forEach(function(k){if(k.split('|')[0]===id)n+=panier[k]});o.textContent=n;
     });
     var c=calcul(),L=document.getElementById('lignes');
-    L.innerHTML=c.lignes.length?c.lignes.map(function(l){return '<div class="ligne"><span>'+l.q+' × '+esc(l.nom)+'</span><span>'+eur(l.px)+'</span></div>'}).join('')+(c.remise?'<div class="ligne remise"><span>🎁 '+c.offertes+' pinsa offerte'+(c.offertes>1?'s':'')+' (2 + 1)</span><span>−'+eur(c.remise)+'</span></div>':''):'<p class="vide">Votre panier est vide. Ajoutez une pinsa pour commencer.</p>';
+    L.innerHTML=c.lignes.length?c.lignes.map(function(l){var k=esc(l.k);return '<div class="ligne"><span>'+l.q+' × '+esc(l.nom)+'<span class="lq"><button type="button" data-lm="'+k+'" aria-label="Retirer un">−</button><button type="button" data-lp="'+k+'" aria-label="Ajouter un">+</button><button type="button" class="lx" data-lx="'+k+'" aria-label="Supprimer la ligne">Supprimer</button></span></span><span>'+eur(l.px)+'</span></div>'}).join('')+'<button type="button" class="vider" id="vider">Vider le panier</button>'+(c.remise?'<div class="ligne remise"><span>🎁 '+c.offertes+' pinsa offerte'+(c.offertes>1?'s':'')+' (2 + 1)</span><span>−'+eur(c.remise)+'</span></div>':''):'<p class="vide">Votre panier est vide. Ajoutez une pinsa pour commencer.</p>';
     document.getElementById('total').textContent=eur(c.total);
     document.getElementById('b-total').textContent=eur(c.total);
     document.getElementById('b-nb').textContent=c.nb+' article'+(c.nb>1?'s':'');
