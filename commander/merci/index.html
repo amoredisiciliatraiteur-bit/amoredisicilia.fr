@@ -32,20 +32,25 @@ h1{font-family:Georgia,'Times New Roman',serif;font-size:1.8rem;line-height:1.2;
   var T=document.getElementById('titre'),X=document.getElementById('texte'),A=document.getElementById('actions'),R=document.getElementById('ref');
   var c=null;try{c=JSON.parse(localStorage.getItem('amore-paiement')||'null')}catch(e){}
   // Autre navigateur (ex. retour depuis l'appli de la banque) : on tente l'identifiant passé dans l'adresse
-  var Q=new URLSearchParams(location.search),qid=Q.get('checkout_id')||Q.get('id');
-  if((!c||!c.id)&&qid)c={id:qid,ref:Q.get('ref')||'',msg:''};
+  var Q=new URLSearchParams(location.search),qid=Q.get('checkout_id')||Q.get('id'),qref=Q.get('ref')||'';
+  if(qref&&c&&c.ref&&c.ref!==qref)c=null; // ancienne commande restée sur l'appareil
+  if((!c||!c.id)&&(qid||qref))c={id:qid||'',ref:qref,msg:''};
   function eur(n){return Number(n).toFixed(2).replace('.',',')+' €'}
-  if(!c||!c.id){T.textContent='Commande introuvable';X.textContent='Nous ne retrouvons pas votre commande sur cet appareil. Si vous avez payé, appelez-nous au 06 76 81 89 03.';A.innerHTML='<a class="btn retour" href="/commander/">Retour à la commande</a>';return}
+  if(!c||!(c.id||c.ref)){T.textContent='Commande introuvable';X.textContent='Nous ne retrouvons pas votre commande sur cet appareil. Si vous avez payé, appelez-nous au 06 76 81 89 03.';A.innerHTML='<a class="btn retour" href="/commander/">Retour à la commande</a>';return}
   if(c.ref)R.textContent='Référence : '+c.ref;
   var essais=0,MAX=40; // ≈ 2 minutes (3D Secure parfois lent)
   function verifier(){
-    fetch(PAY_URL+'/statut?id='+encodeURIComponent(c.id)).then(function(r){return r.json()}).then(function(d){
-      if(d.ref&&!c.ref){c.ref=d.ref;R.textContent='Référence : '+d.ref}
+    fetch(PAY_URL+'/statut?'+(c.id?'id='+encodeURIComponent(c.id):'ref='+encodeURIComponent(c.ref))).then(function(r){return r.json()}).then(function(d){
+      if(d.erreur){T.textContent='Vérification impossible';X.textContent='Si vous avez payé, appelez-nous au 06 76 81 89 03 en donnant la référence ci-dessous.';A.innerHTML='<a class="btn retour" href="/commander/">Retour à la commande</a>';return}
+      if(d.ref&&!c.ref){c.ref=d.ref;R.textContent='Référence : '+d.ref}if(d.id&&!c.id)c.id=d.id;
       if(d.statut==='PAID'){
         var m='✅ COMMANDE PAYÉE EN LIGNE — '+eur(d.montant)+' (réf. '+c.ref+')'+(c.msg?'\n\n'+c.msg:'\n\n(Détail de la commande perdu au changement de navigateur — merci de le préciser)');
         T.textContent='Paiement reçu, grazie !';
         X.innerHTML='Dernière étape : <b>envoyez-nous la commande</b> pour qu\'Oneta la prépare à l\'heure choisie.';
         A.innerHTML='<a class="btn wa" id="wa" href="https://wa.me/'+TEL+'?text='+encodeURIComponent(m)+'">Envoyer ma commande par WhatsApp</a><a class="btn sms" href="sms:+'+TEL+(/iPhone|iPad|iPod/.test(navigator.userAgent)?'&':'?')+'body='+encodeURIComponent(m)+'">Envoyer par SMS</a>';
+        if(c.msg&&c.id){fetch(PAY_URL+'/notif',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:c.id,msg:c.msg})}).then(function(r){if(r.ok){
+          X.innerHTML='Votre commande est <b>transmise à Oneta</b>, rien d\'autre à faire. À tout à l\'heure&nbsp;!';
+          A.innerHTML='<a class="btn sms" href="https://wa.me/'+TEL+'?text='+encodeURIComponent(m)+'">Nous écrire sur WhatsApp (facultatif)</a>';}}).catch(function(){})}
         try{localStorage.removeItem('amore-panier2');var s=JSON.parse(localStorage.getItem('amore-paiement')||'null');if(s){s.vu=1;localStorage.setItem('amore-paiement',JSON.stringify(s))}}catch(e){}
       }else if((d.statut==='PENDING'||!d.statut)&&essais++<MAX){
         if(essais===5){X.textContent='Votre banque met un peu de temps à confirmer, ne fermez pas cette page…'}
