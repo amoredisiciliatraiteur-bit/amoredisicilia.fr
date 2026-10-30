@@ -48,9 +48,13 @@ h1{font-family:Georgia,'Times New Roman',serif;font-size:1.8rem;line-height:1.2;
         T.textContent='Paiement reçu, grazie !';
         X.innerHTML='Dernière étape : <b>envoyez-nous la commande</b> pour qu\'Oneta la prépare à l\'heure choisie.';
         A.innerHTML='<a class="btn wa" id="wa" href="https://wa.me/'+TEL+'?text='+encodeURIComponent(m)+'">Envoyer ma commande par WhatsApp</a><a class="btn sms" href="sms:+'+TEL+(/iPhone|iPad|iPod/.test(navigator.userAgent)?'&':'?')+'body='+encodeURIComponent(m)+'">Envoyer par SMS</a>';
-        if(c.msg&&c.id){fetch(PAY_URL+'/notif',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id:c.id,msg:c.msg})}).then(function(r){if(r.ok){
-          X.innerHTML='Votre commande est <b>transmise à Oneta</b>, rien d\'autre à faire. À tout à l\'heure&nbsp;!';
-          A.innerHTML='<a class="btn sms" href="https://wa.me/'+TEL+'?text='+encodeURIComponent(m)+'">Nous écrire sur WhatsApp (facultatif)</a>';}}).catch(function(){})}
+        // Notification de la commande payée (application ntfy de Gianni / Oneta) — envoyée depuis le navigateur du client
+        var cleN='amore-notif-'+(c.id||c.ref),dejaN=false;try{dejaN=!!localStorage.getItem(cleN)}catch(e){}
+        function transmise(){if(c.msg){X.innerHTML='Votre commande est <b>transmise à Oneta</b>, rien d\'autre à faire. À tout à l\'heure&nbsp;!';
+          A.innerHTML='<a class="btn sms" href="https://wa.me/'+TEL+'?text='+encodeURIComponent(m)+'">Nous écrire sur WhatsApp (facultatif)</a>';}}
+        if(dejaN)transmise();
+        else fetch('https://ntfy.sh/',{method:'POST',body:JSON.stringify({topic:'amore-commandes-k7q2xw9m4t',title:'Commande payée '+eur(d.montant)+' — réf. '+c.ref,message:m,priority:5,tags:['pizza']})}).then(function(r){if(!r.ok)return;
+          try{localStorage.setItem(cleN,'1')}catch(e){}transmise();}).catch(function(){});
         try{localStorage.removeItem('amore-panier2');var s=JSON.parse(localStorage.getItem('amore-paiement')||'null');if(s){s.vu=1;localStorage.setItem('amore-paiement',JSON.stringify(s))}}catch(e){}
       }else if((d.statut==='PENDING'||!d.statut)&&essais++<MAX){
         if(essais===5){X.textContent='Votre banque met un peu de temps à confirmer, ne fermez pas cette page…'}
