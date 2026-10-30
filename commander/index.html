@@ -98,6 +98,8 @@ textarea{min-height:64px;resize:vertical}
 .btn:disabled{opacity:.45;cursor:not-allowed}
 .aide{font-size:.82rem;color:var(--doux)}
 .erreur{color:var(--bordeaux);font-weight:700;font-size:.88rem}
+.echec-cb{background:#FDECEE;border:2px solid var(--bordeaux);border-radius:16px;padding:14px 16px;margin:12px 0;font-size:.92rem;line-height:1.45}
+.echec-cb .btn{display:block;text-align:center;text-decoration:none;margin-top:10px}
 .fait{background:#E3F4E9;color:#1E7A45;border-radius:14px;padding:14px;font-weight:700;font-size:.92rem}
 .barre{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--sapin-3);color:#FFF8EC;padding:12px max(16px,env(safe-area-inset-right,0px)) calc(12px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));display:flex;align-items:center;justify-content:space-between;gap:12px}
 .barre b{font:800 1.3rem/1 var(--f-titre)}
@@ -363,12 +365,26 @@ textarea{min-height:64px;resize:vertical}
     fetch(PAY_URL+'/checkout',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({panier:panier,prenom:document.getElementById('prenom').value.trim(),retrait:j.label+(H.value.indexOf('Dès')===0?', dès que possible':' '+H.value)})})
       .then(function(r){return r.json()}).then(function(d){
         if(!d.url)throw new Error(d.erreur||'Paiement indisponible');
-        try{localStorage.setItem('amore-paiement',JSON.stringify({id:d.id,ref:d.ref,montant:d.montant,msg:m}))}catch(x){}
+        try{localStorage.setItem('amore-paiement',JSON.stringify({id:d.id,ref:d.ref,montant:d.montant,msg:m,t:Date.now()}))}catch(x){}
         location.href=d.url;
       }).catch(function(x){b.disabled=false;b.textContent='💳 Payer par carte maintenant';err.hidden=false;err.textContent='Le paiement en ligne est momentanément indisponible ('+x.message+'). Envoyez votre commande par WhatsApp et payez au retrait.'});
   });
   document.getElementById('sms').addEventListener('click',function(){var m=message();if(!m)return;var ios=/iPhone|iPad|iPod/.test(navigator.userAgent);location.href='sms:+'+TEL+(ios?'&':'?')+'body='+encodeURIComponent(m);fini()});
   rendre();
+  // Retour depuis SumUp sans paiement (carte refusée, abandon, bouton retour) : on propose de payer au retrait
+  (function(){
+    var c=null;try{c=JSON.parse(localStorage.getItem('amore-paiement')||'null')}catch(x){}
+    if(!c||!c.id||c.vu||!c.t||Date.now()-c.t>3*3600e3)return;
+    fetch(PAY_URL+'/statut?id='+encodeURIComponent(c.id)).then(function(r){return r.json()}).then(function(d){
+      if(d.statut==='PAID'){location.href='/commander/merci/';return}
+      c.vu=1;try{localStorage.setItem('amore-paiement',JSON.stringify(c))}catch(x){}
+      var box=document.createElement('div');box.className='echec-cb';box.setAttribute('role','alert');
+      box.innerHTML='<b>Votre paiement par carte n\'a pas abouti.</b> Votre carte n\'a pas été débitée. Vous pouvez réessayer, ou envoyer votre commande et <b>payer au retrait</b>.'+
+        '<a class="btn btn-wa" href="https://wa.me/'+TEL+'?text='+encodeURIComponent(c.msg+'\n\n💳 Paiement en ligne non abouti — paiement au retrait')+'">Envoyer ma commande et payer au retrait</a>';
+      var cb=document.getElementById('bloc-cb');cb.parentNode.insertBefore(box,cb);
+      box.scrollIntoView({behavior:'smooth',block:'center'});
+    }).catch(function(){});
+  })();
 })();
 </script>
 </body>

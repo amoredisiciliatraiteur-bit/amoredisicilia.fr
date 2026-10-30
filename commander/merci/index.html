@@ -31,25 +31,33 @@ h1{font-family:Georgia,'Times New Roman',serif;font-size:1.8rem;line-height:1.2;
   var PAY_URL='https://ads-paiement.amoredisicilia-traiteur.workers.dev',TEL='33676818903';
   var T=document.getElementById('titre'),X=document.getElementById('texte'),A=document.getElementById('actions'),R=document.getElementById('ref');
   var c=null;try{c=JSON.parse(localStorage.getItem('amore-paiement')||'null')}catch(e){}
+  // Autre navigateur (ex. retour depuis l'appli de la banque) : on tente l'identifiant passé dans l'adresse
+  var Q=new URLSearchParams(location.search),qid=Q.get('checkout_id')||Q.get('id');
+  if((!c||!c.id)&&qid)c={id:qid,ref:Q.get('ref')||'',msg:''};
   function eur(n){return Number(n).toFixed(2).replace('.',',')+' €'}
   if(!c||!c.id){T.textContent='Commande introuvable';X.textContent='Nous ne retrouvons pas votre commande sur cet appareil. Si vous avez payé, appelez-nous au 06 76 81 89 03.';A.innerHTML='<a class="btn retour" href="/commander/">Retour à la commande</a>';return}
-  R.textContent='Référence : '+c.ref;
-  var essais=0;
+  if(c.ref)R.textContent='Référence : '+c.ref;
+  var essais=0,MAX=40; // ≈ 2 minutes (3D Secure parfois lent)
   function verifier(){
     fetch(PAY_URL+'/statut?id='+encodeURIComponent(c.id)).then(function(r){return r.json()}).then(function(d){
+      if(d.ref&&!c.ref){c.ref=d.ref;R.textContent='Référence : '+d.ref}
       if(d.statut==='PAID'){
-        var m='✅ COMMANDE PAYÉE EN LIGNE — '+eur(d.montant)+' (réf. '+c.ref+')\n\n'+c.msg;
+        var m='✅ COMMANDE PAYÉE EN LIGNE — '+eur(d.montant)+' (réf. '+c.ref+')'+(c.msg?'\n\n'+c.msg:'\n\n(Détail de la commande perdu au changement de navigateur — merci de le préciser)');
         T.textContent='Paiement reçu, grazie !';
         X.innerHTML='Dernière étape : <b>envoyez-nous la commande</b> pour qu\'Oneta la prépare à l\'heure choisie.';
         A.innerHTML='<a class="btn wa" id="wa" href="https://wa.me/'+TEL+'?text='+encodeURIComponent(m)+'">Envoyer ma commande par WhatsApp</a><a class="btn sms" href="sms:+'+TEL+(/iPhone|iPad|iPod/.test(navigator.userAgent)?'&':'?')+'body='+encodeURIComponent(m)+'">Envoyer par SMS</a>';
-        try{localStorage.removeItem('amore-panier2')}catch(e){}
-      }else if((d.statut==='PENDING'||!d.statut)&&essais++<6){setTimeout(verifier,2500)}
+        try{localStorage.removeItem('amore-panier2');var s=JSON.parse(localStorage.getItem('amore-paiement')||'null');if(s){s.vu=1;localStorage.setItem('amore-paiement',JSON.stringify(s))}}catch(e){}
+      }else if((d.statut==='PENDING'||!d.statut)&&essais++<MAX){
+        if(essais===5){X.textContent='Votre banque met un peu de temps à confirmer, ne fermez pas cette page…'}
+        setTimeout(verifier,3000);
+      }
       else{
         T.textContent='Paiement non abouti';
         X.textContent='Votre carte n\'a pas été débitée. Vous pouvez réessayer, ou envoyer la commande et payer au retrait.';
-        A.innerHTML='<a class="btn retour" href="/commander/">Revenir à ma commande</a><a class="btn wa" href="https://wa.me/'+TEL+'?text='+encodeURIComponent(c.msg)+'">Commander et payer au retrait</a>';
+        A.innerHTML='<a class="btn retour" href="/commander/">Revenir à ma commande</a>'+(c.msg?'<a class="btn wa" href="https://wa.me/'+TEL+'?text='+encodeURIComponent(c.msg+'\n\n💳 Paiement en ligne non abouti — paiement au retrait')+'">Commander et payer au retrait</a>':'');
+        try{var s=JSON.parse(localStorage.getItem('amore-paiement')||'null');if(s){s.vu=1;localStorage.setItem('amore-paiement',JSON.stringify(s))}}catch(e){}
       }
-    }).catch(function(){if(essais++<6)setTimeout(verifier,2500);else{T.textContent='Vérification impossible';X.textContent='Appelez-nous au 06 76 81 89 03 en donnant la référence ci-dessous.'}});
+    }).catch(function(){if(essais++<MAX)setTimeout(verifier,3000);else{T.textContent='Vérification impossible';X.textContent='Appelez-nous au 06 76 81 89 03 en donnant la référence ci-dessous.'}});
   }
   verifier();
 })();
