@@ -302,6 +302,10 @@ footer{background:var(--sapin-3);color:#FFF8EC}
 <link rel="canonical" href="https://amoredisicilia.fr/">
 </head>
 <body>
+<!-- ANNONCE-FERIE-11-NOV : à retirer après le 11/11/2026 -->
+<div id="annonce-ferie" hidden style="background:#9D0E20;color:#FFF8EC;text-align:center;font:600 .95rem/1.4 Figtree,Arial,sans-serif;padding:10px 16px">🇫🇷 <strong>Fermé aujourd’hui, mercredi 11 novembre (Armistice).</strong> Réouverture jeudi 12 novembre à 19h · <a href="/commander/" style="color:#F3D79A;font-weight:700;text-decoration:underline">commandez déjà pour jeudi</a></div>
+<script>(function(){try{var d=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Paris'}).format(new Date());if(d<='2026-11-11')document.getElementById('annonce-ferie').hidden=false}catch(e){}})()</script>
+<!-- /ANNONCE-FERIE-11-NOV -->
 
 <header class="top">
   <div class="wrap">
@@ -624,7 +628,10 @@ footer{background:var(--sapin-3);color:#FFF8EC}
     var m=parseInt(get('hour'),10)*60+parseInt(get('minute'),10);
     var ouvertJour=function(d){return d===0||d>=3};
     var el=document.getElementById('statut'),tx=document.getElementById('statut-txt');
-    if(j>=0){
+    var ymd='';try{ymd=new Intl.DateTimeFormat('en-CA',{timeZone:'Europe/Paris'}).format(new Date())}catch(e){}
+    var FERMES={'2026-11-11':1};
+    if(j>=0&&FERMES[ymd]){tx.textContent='Fermé aujourd’hui (férié) · demain 19h'}
+    else if(j>=0){
       if(ouvertJour(j)&&m>=1140&&m<1320){el.classList.add('ouvert');tx.textContent='Ouvert · jusqu’à 22h'}
       else if(ouvertJour(j)&&m<1140){tx.textContent='Ouvre ce soir à 19h'}
       else{
