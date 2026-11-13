@@ -16,6 +16,14 @@ h1{font-family:Georgia,'Times New Roman',serif;font-size:1.8rem;line-height:1.2;
 .btn{display:block;width:100%;border:0;border-radius:999px;padding:16px 20px;font:800 1rem/1 Helvetica,Arial,sans-serif;text-decoration:none;cursor:pointer;margin-top:12px}
 .wa{background:#1FAF55;color:#fff}.sms{background:var(--sapin);color:var(--creme)}.retour{background:var(--bord);color:var(--creme)}
 .ref{font-size:.9rem;color:#4F6A59;margin-top:14px}
+.ticket{text-align:left;margin:20px 0 6px;border:1px dashed #C9B89A;border-radius:14px;padding:16px 16px 12px;background:#FFFDF8;font-size:.92rem}
+.ticket h2{font:800 .8rem/1.2 Helvetica,Arial,sans-serif;letter-spacing:.12em;text-transform:uppercase;margin:0 0 4px;color:var(--bord);text-align:center}
+.ticket .entete{text-align:center;color:#4F6A59;font-size:.82rem;margin-bottom:10px}
+.ticket .l{display:flex;justify-content:space-between;gap:10px;padding:3px 0}.ticket .l span:last-child{white-space:nowrap}
+.ticket .tot{border-top:1px dashed #C9B89A;margin-top:8px;padding-top:8px;font-weight:800;font-size:1.05rem}
+.ticket .info{color:#4F6A59;font-size:.82rem;margin-top:8px;white-space:pre-line}
+.imprimer{background:#fff;color:var(--sapin);border:2px solid var(--sapin)}
+@media print{body{background:#fff;padding:0}.carte{box-shadow:none}#actions,.noprint{display:none!important}}
 </style>
 </head>
 <body>
@@ -23,6 +31,7 @@ h1{font-family:Georgia,'Times New Roman',serif;font-size:1.8rem;line-height:1.2;
   <img src="/img/logo.webp" alt="Amore di Sicilia">
   <h1 id="titre">Vérification du paiement…</h1>
   <p id="texte">Un instant, nous vérifions votre paiement auprès de SumUp.</p>
+  <div id="ticket"></div>
   <div id="actions"></div>
   <p class="ref" id="ref"></p>
 </main>
@@ -38,6 +47,23 @@ h1{font-family:Georgia,'Times New Roman',serif;font-size:1.8rem;line-height:1.2;
   function eur(n){return Number(n).toFixed(2).replace('.',',')+' €'}
   if(!c||!(c.id||c.ref)){T.textContent='Commande introuvable';X.textContent='Nous ne retrouvons pas votre commande sur cet appareil. Si vous avez payé, appelez-nous au 06 76 81 89 03.';A.innerHTML='<a class="btn retour" href="/commander/">Retour à la commande</a>';return}
   if(c.ref)R.textContent='Référence : '+c.ref;
+  function esc(t){return String(t).replace(/[&<>"]/g,function(x){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[x]})}
+  // Reçu de commande affiché à l'écran (à enregistrer en PDF / capture), stocké sur l'appareil
+  function ticket(d){
+    var lignes=[],info=[],quand=new Date(c.t||Date.now());
+    (c.msg||'').split('\n').forEach(function(x){
+      var m=x.match(/^•\s*(.+?)\s+—\s+([\d,]+ €)$/);if(m){lignes.push('<div class="l"><span>'+esc(m[1])+'</span><span>'+esc(m[2])+'</span></div>');return}
+      var o=x.match(/^🎁 (.+?) — (−[\d,]+ €)$/);if(o){lignes.push('<div class="l"><span>🎁 '+esc(o[1])+'</span><span>'+esc(o[2])+'</span></div>');return}
+      if(/^(Retrait|Nom|Remarque) :/.test(x))info.push(x);
+    });
+    document.getElementById('ticket').innerHTML='<div class="ticket"><h2>Reçu de commande</h2><div class="entete">Amore di Sicilia · 25 rue des Vieilles Postes, 51470 Saint-Memmie · 06 76 81 89 03<br>'+
+      quand.toLocaleDateString('fr-FR')+' à '+quand.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+' · Réf. '+esc(c.ref||'')+'</div>'+
+      (lignes.length?lignes.join(''):'<div class="info">Détail de la commande non disponible sur cet appareil.</div>')+
+      '<div class="l tot"><span>Total payé par carte (SumUp)</span><span>'+eur(d.montant)+'</span></div>'+
+      (info.length?'<div class="info">'+esc(info.join('\n'))+'</div>':'')+
+      '<div class="info">Le ticket de caisse vous est remis au retrait de la commande.</div></div>'+
+      '<button class="btn imprimer noprint" type="button" onclick="window.print()">📄 Enregistrer / imprimer mon reçu</button>';
+  }
   var essais=0,MAX=40; // ≈ 2 minutes (3D Secure parfois lent)
   function verifier(){
     fetch(PAY_URL+'/statut?'+(c.id?'id='+encodeURIComponent(c.id):'ref='+encodeURIComponent(c.ref))).then(function(r){return r.json()}).then(function(d){
@@ -46,6 +72,7 @@ h1{font-family:Georgia,'Times New Roman',serif;font-size:1.8rem;line-height:1.2;
       if(d.statut==='PAID'){
         var m='✅ COMMANDE PAYÉE EN LIGNE — '+eur(d.montant)+' (réf. '+c.ref+')'+(c.msg?'\n\n'+c.msg:'\n\n(Détail de la commande perdu au changement de navigateur — merci de le préciser)');
         T.textContent='Paiement reçu, grazie !';
+        ticket(d);
         X.innerHTML='⚠️ <b>Dernière étape obligatoire :</b> appuyez sur le bouton ci-dessous et <b>envoyez le message</b>, sinon nous ne recevons pas votre commande.';
         A.innerHTML='<a class="btn wa" id="wa" href="https://wa.me/'+TEL+'?text='+encodeURIComponent(m)+'">Envoyer ma commande par WhatsApp</a><a class="btn sms" href="sms:+'+TEL+(/iPhone|iPad|iPod/.test(navigator.userAgent)?'&':'?')+'body='+encodeURIComponent(m)+'">Envoyer par SMS</a>';
         // Notification de la commande payée (application ntfy de Gianni / Oneta) — envoyée depuis le navigateur du client
